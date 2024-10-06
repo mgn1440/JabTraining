@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jab_training/main.dart';
 import 'package:jab_training/pages/home_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:jab_training/pages/gym_select_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -22,6 +20,8 @@ class _SignUpPageState extends State<SignUpPage> {
   late final TextEditingController _phoneController = TextEditingController();
   late final TextEditingController _passwordController = TextEditingController();
   late final TextEditingController _confirmPasswordController = TextEditingController();
+  late final TextEditingController _birthController = TextEditingController();
+  String? _selectedGender;
 
   late final StreamSubscription<AuthState> _authStateSubscription;
 
@@ -38,13 +38,16 @@ class _SignUpPageState extends State<SignUpPage> {
       final AuthResponse res = await supabase.auth.signUp(
         email: _emailController.text,
         password: _passwordController.text,
+        data: {
+          'name': _nameController.text,
+          'phone': _phoneController.text,
+          'birth': _birthController.text,
+          'gender': _selectedGender,
+        },
       );
-      print(res);
     } on AuthException catch (error) {
       if (mounted) {
         context.showSnackBar(error.message, isError: true);
-        print(error.message);
-        print(error);
       }
     } catch (error) {
       if (mounted) {
@@ -74,13 +77,29 @@ class _SignUpPageState extends State<SignUpPage> {
         },
         onError: (error) {
           if (error is AuthException) {
-            context.showSnackBar(error.message, isError: true);
+            if (mounted) {
+              context.showSnackBar(error.message, isError: true);
+            }
           } else {
-            context.showSnackBar('Unexpected error occured', isError: true);
+            if (mounted) {
+              context.showSnackBar('Unexpected error occured', isError: true);
+            }
           }
         },
     );
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _authStateSubscription.cancel();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _nameController.dispose();
+    _phoneController.dispose();
+    _birthController.dispose();
+    super.dispose();
   }
 
 
@@ -110,7 +129,7 @@ class _SignUpPageState extends State<SignUpPage> {
           TextFormField(
             controller: _emailController,
             decoration: const InputDecoration(
-              labelText: '이메일',
+              labelText: '이메일 주소',
             ),
           ),
           const SizedBox(height: 12),
@@ -118,6 +137,31 @@ class _SignUpPageState extends State<SignUpPage> {
             controller: _phoneController,
             decoration: const InputDecoration(
               labelText: '전화번호',
+            ),
+          ),
+          const SizedBox(height: 12),
+          DropdownButtonFormField<String>(
+              value: _selectedGender,
+              onChanged: (String? value) {
+                setState(() {
+                  _selectedGender = value;
+                });
+              },
+             decoration: const InputDecoration(
+               labelText: '성별',
+             ),
+            items: <String>['남성', '여성'].map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 12),
+          TextFormField(
+            controller: _birthController,
+            decoration: const InputDecoration(
+              labelText: '생년월일 (YYYY-MM-DD)',
             ),
           ),
           const SizedBox(height: 12),

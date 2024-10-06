@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:jab_training/pages/sign_in_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:jab_training/pages/sign_up_page.dart';
 import 'package:jab_training/pages/sign_up_page.dart';
 
 class AuthGate extends StatelessWidget {
@@ -27,7 +29,11 @@ class AuthGate extends StatelessWidget {
                   ),
                   const SizedBox(width: 20),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => const SignInPage()),
+                      );
+                    },
                     child: const Text('로그인'),
                   ),
                 ],
