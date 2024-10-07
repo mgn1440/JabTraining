@@ -14,10 +14,8 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   bool _isLoading = false;
   bool _redirecting = false;
-
   late final TextEditingController _emailController = TextEditingController();
   late final TextEditingController _passwordController = TextEditingController();
-
   late final StreamSubscription<AuthState> _authStateSubscription;
 
   Future<void> _signIn() async {
@@ -67,7 +65,7 @@ class _SignInPageState extends State<SignInPage> {
           }
         } else {
           if (mounted) {
-            context.showSnackBar('Unexpected error occured', isError: true);
+            context.showSnackBar('Unexpected error occured',   isError: true);
           }
         }
       },
