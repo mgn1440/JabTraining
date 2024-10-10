@@ -3,12 +3,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/pages/auth_gate.dart';
 import 'package:jab_training/pages/home_page.dart';
+import 'package:jab_training/const/color.dart';
 
 Future<void> main() async {
   await dotenv.load();
   await Supabase.initialize(
-      url: dotenv.env['SUPABASE_URL']!,
-      anonKey: dotenv.env['SUPABASE_KEY']!,
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_KEY']!,
   );
   runApp(const MyApp());
 }
@@ -24,6 +25,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Supabase Flutter',
       theme: ThemeData.dark().copyWith(
+        inputDecorationTheme: InputDecorationTheme(
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: grayscaleSwatch[100]!),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: grayscaleSwatch[100]!),
+          ),
+          labelStyle: TextStyle(color: grayscaleSwatch[100]),
+        ),
         primaryColor: Colors.green,
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
@@ -46,12 +56,13 @@ class MyApp extends StatelessWidget {
 
 extension ContextExtension on BuildContext {
   void showSnackBar(String message, {bool isError = false}) {
-    ScaffoldMessenger.of(this).showSnackBar(SnackBar(
-      content: Text(message),
-      backgroundColor: isError
-        ? Theme.of(this).colorScheme.error
-        : Theme.of(this).snackBarTheme.backgroundColor,
-   ),
-  );
- }
+    ScaffoldMessenger.of(this).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError
+            ? Theme.of(this).colorScheme.error
+            : Theme.of(this).snackBarTheme.backgroundColor,
+      ),
+    );
+  }
 }
