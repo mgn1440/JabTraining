@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:jab_training/component/buttons.dart';
+import 'package:jab_training/const/color.dart';
 import 'package:jab_training/main.dart';
 import 'package:jab_training/pages/home_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -14,9 +16,20 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   bool _isLoading = false;
   bool _redirecting = false;
+  bool _isFormValid = false;
+
   late final TextEditingController _emailController = TextEditingController();
-  late final TextEditingController _passwordController = TextEditingController();
+  late final TextEditingController _passwordController =
+      TextEditingController();
+
   late final StreamSubscription<AuthState> _authStateSubscription;
+
+  void _validateForm() {
+    setState(() {
+      _isFormValid = _emailController.text.isNotEmpty &&
+          _passwordController.text.isNotEmpty;
+    });
+  }
 
   Future<void> _signIn() async {
     try {
@@ -47,9 +60,11 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   void initState() {
+    _emailController.addListener(_validateForm);
+    _passwordController.addListener(_validateForm);
     _authStateSubscription = supabase.auth.onAuthStateChange.listen(
       (data) {
-        if (_redirecting) return ;
+        if (_redirecting) return;
         final session = data.session;
         if (session != null) {
           _redirecting = true;
@@ -84,100 +99,46 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('로그인'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+        appBar: AppBar(
+          title: const Text('로그인'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
         ),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-        children: [
-          const SizedBox(height: 18),
-          TextFormField(
-            controller: _emailController,
-            decoration: const InputDecoration(
-              labelText: '이메일',
-              border: OutlineInputBorder(),
+        body: ListView(
+          padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+          children: [
+            const SizedBox(height: 18),
+            TextFormField(
+              controller: _emailController,
+              cursorColor: grayscaleSwatch[100],
+              keyboardType: TextInputType.emailAddress,
+              decoration: const InputDecoration(
+                labelText: '이메일',
+                border: OutlineInputBorder(),
+              ),
             ),
-          ),
-          const SizedBox(height: 12),
-          TextFormField(
-            controller: _passwordController,
-            decoration: const InputDecoration(
-              labelText: '비밀번호',
-              border: OutlineInputBorder(),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _passwordController,
+              cursorColor: grayscaleSwatch[100],
+              decoration: const InputDecoration(
+                labelText: '비밀번호',
+                border: OutlineInputBorder(),
+              ),
+              obscureText: true,
             ),
-            obscureText: true,
-          ),
-          const SizedBox(height: 12),
-          ElevatedButton(
-            onPressed: _isLoading ? null : _signIn,
-            child: Text(_isLoading? '로딩중...' : '로그인'),
-          ),
-        ],
-      )
-    );
+            const SizedBox(height: 12),
+            CustomButton(
+              buttonType: ButtonType.filled,
+              isEnabled: _isFormValid,
+              onPressed: _isLoading ? null : _signIn,
+              child: Text(_isLoading ? '로딩중...' : '로그인'),
+            ),
+          ],
+        ));
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
