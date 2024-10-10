@@ -5,9 +5,9 @@ class WorkoutTile extends StatelessWidget {
   final String workoutName;
   final DateTime startTime;
   final int duration;
-  final int maxParticipants;
-  final int currentParticipants;
-  final VoidCallback onReserve;
+  final VoidCallback onReserve; // 등록 or 취소
+  final int locationId;
+  final bool isReservationPage;
 
 
   const WorkoutTile({
@@ -15,15 +15,19 @@ class WorkoutTile extends StatelessWidget {
     required this.workoutName,
     required this.startTime,
     required this.duration,
-    required this.maxParticipants,
-    required this.currentParticipants,
     required this.onReserve,
+    required this.locationId,
+    this.isReservationPage = false,
   });
+
+  final List<String> _gymLocations = const [
+    '선릉점',
+    '역삼점',
+    '교대점',
+  ];
 
   @override
   Widget build(BuildContext context) {
-    int remainingParticipants = maxParticipants - currentParticipants;
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Card(
@@ -41,7 +45,7 @@ class WorkoutTile extends StatelessWidget {
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    workoutName,
+                    '$duration분',
                     style: const TextStyle(fontSize: 14),
                   ),
                 ],
@@ -55,16 +59,43 @@ class WorkoutTile extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    '남은 자리: $remainingParticipants',
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                  ElevatedButton(
-                    onPressed: onReserve,
-                    child: const Text('예약하기'),
-                  ),
+                  if (isReservationPage) ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween, // 텍스트와 아이콘을 좌우로 배치
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start, // 텍스트 정렬
+                          children: [
+                            Text(
+                              _gymLocations[locationId - 1],
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                            const Text(
+                              '예약됨',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.green,
+                              ),
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          onPressed: onReserve,
+                          icon: const Icon(
+                            Icons.cancel,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ]
+                  else
+                    ElevatedButton(
+                      onPressed: onReserve,
+                      child: const Text('예약하기'),
+                    ),
                 ],
-              ),
+              )
             ],
           ),
         ),
