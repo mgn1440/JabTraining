@@ -7,6 +7,7 @@ class WorkoutTile extends StatelessWidget {
   final int duration;
   final VoidCallback onReserve; // 등록 or 취소
   final int locationId;
+  final bool isReserved;
   final bool isReservationPage;
 
 
@@ -17,6 +18,7 @@ class WorkoutTile extends StatelessWidget {
     required this.duration,
     required this.onReserve,
     required this.locationId,
+    this.isReserved = false,
     this.isReservationPage = false,
   });
 
@@ -89,11 +91,21 @@ class WorkoutTile extends StatelessWidget {
                       ],
                     ),
                   ]
-                  else
+                  else if (isReserved == false) ...[
                     ElevatedButton(
                       onPressed: onReserve,
                       child: const Text('예약하기'),
                     ),
+                  ]
+                  else ...[
+                      const Text(
+                        '예약됨',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.green,
+                        ),
+                      ),
+                  ],
                 ],
               )
             ],

@@ -60,6 +60,18 @@ class _SchedulePageState extends State<SchedulePage> {
     );
   }
 
+  Future<bool> isWorkoutReserved(String workoutId) async {
+    final userId = supabase.auth.currentUser!.id;
+    final response = await supabase
+        .from('reservations')
+        .select()
+        .eq('workout_id', workoutId)
+        .eq('user_id', userId)
+        .maybeSingle(); // 해당 예약이 없을 경우 null 반환
+    return response != null; // null이 아니면 예약된 상태
+  }
+
+
   void _handleReserve(Workout workout) async {
     setState(() {
       _isLoading = true;
@@ -168,14 +180,29 @@ class _SchedulePageState extends State<SchedulePage> {
                         itemCount: workouts.length,
                         itemBuilder: (context, index) {
                          final workout = workouts[index];
-                          return WorkoutTile(
-                              workoutName: workout.workoutName,
-                              startTime: workout.startTime,
-                              duration: workout.duration,
-                              onReserve: _isLoading
-                                ? () => {}
-                                : () => _handleReserve(workout),
-                              locationId: workout.locationId,
+                          return FutureBuilder<bool>(
+                            future: isWorkoutReserved(workout.id),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return const Center(child: CircularProgressIndicator());
+                              }
+                              if (snapshot.hasError) {
+                                return const Center(child: Text('오류가 발생했습니다.'));
+                              }
+
+                              final isReserved = snapshot.data ?? false;
+
+                              return WorkoutTile(
+                                  workoutName: workout.workoutName,
+                                  startTime: workout.startTime,
+                                  duration: workout.duration,
+                                  onReserve: _isLoading
+                                    ? () => {}
+                                    : () => _handleReserve(workout),
+                                  locationId: workout.locationId,
+                                  isReserved: isReserved,
+                              );
+                            }
                           );
                         }
                     );
