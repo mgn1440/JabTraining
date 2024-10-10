@@ -80,7 +80,7 @@ class _SignInPageState extends State<SignInPage> {
           }
         } else {
           if (mounted) {
-            context.showSnackBar('Unexpected error occured', isError: true);
+            context.showSnackBar('Unexpected error occured',   isError: true);
           }
         }
       },
