@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/pages/sign_up_page.dart';
 import 'package:jab_training/component/buttons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jab_training/pages/gym_select_page.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
@@ -19,7 +20,7 @@ class AuthGate extends StatelessWidget {
           /* 로고 */
           Expanded(
             child: Center(
-              child: SvgPicture.asset('assets/image/Logo.svg', width: 240),
+              child: SvgPicture.asset('assets/images/Logo.svg', width: 240),
             ),
           ),
           Row(
@@ -28,7 +29,10 @@ class AuthGate extends StatelessWidget {
               CustomButton(
                 onPressed: () async {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const SignUpPage()),
+                    MaterialPageRoute(
+                      builder: (context) => const GymSelectPage(),
+                      settings: const RouteSettings(arguments: 'fromSignUp'),
+                    ),
                   );
                 },
                 isEnabled: true,
@@ -40,7 +44,9 @@ class AuthGate extends StatelessWidget {
               CustomButton(
                 onPressed: () async {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const SignInPage()),
+                    MaterialPageRoute(
+                      builder: (context) => const SignInPage(),
+                    ),
                   );
                 },
                 isEnabled: true,

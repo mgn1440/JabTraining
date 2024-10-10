@@ -80,7 +80,7 @@ class _SignInPageState extends State<SignInPage> {
           }
         } else {
           if (mounted) {
-            context.showSnackBar('Unexpected error occured',   isError: true);
+            context.showSnackBar('Unexpected error occured', isError: true);
           }
         }
       },
@@ -108,36 +108,43 @@ class _SignInPageState extends State<SignInPage> {
             },
           ),
         ),
-        body: ListView(
-          padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+        body: Column(
           children: [
-            const SizedBox(height: 18),
-            TextFormField(
-              controller: _emailController,
-              cursorColor: grayscaleSwatch[100],
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(
-                labelText: '이메일',
-                border: OutlineInputBorder(),
+            Expanded(
+              child: ListView(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+                children: [
+                  const SizedBox(height: 18),
+                  TextFormField(
+                    controller: _emailController,
+                    cursorColor: grayscaleSwatch[100],
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      labelText: '이메일',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _passwordController,
+                    cursorColor: grayscaleSwatch[100],
+                    decoration: const InputDecoration(
+                      labelText: '비밀번호',
+                      border: OutlineInputBorder(),
+                    ),
+                    obscureText: true,
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _passwordController,
-              cursorColor: grayscaleSwatch[100],
-              decoration: const InputDecoration(
-                labelText: '비밀번호',
-                border: OutlineInputBorder(),
-              ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 12),
             CustomButton(
-              buttonType: ButtonType.filled,
               isEnabled: _isFormValid,
-              onPressed: _isLoading ? null : _signIn,
-              child: Text(_isLoading ? '로딩중...' : '로그인'),
+              buttonType: ButtonType.filled,
+              onPressed: _signIn,
+              child: Text(_isLoading ? '로딩중...' : "로그인"),
             ),
+            const SizedBox(height: 40),
           ],
         ));
   }
