@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:jab_training/pages/setting_page.dart';
 import 'package:jab_training/pages/schedule_page.dart';
 import 'package:jab_training/pages/reservation_page.dart';
+import 'package:jab_training/pages/introduce_page.dart';
+import 'package:jab_training/pages/workout_video_page.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,12 +19,16 @@ class _HomePageState extends State<HomePage> {
   static const List<String> _titles = <String>[
     '스케줄',
     '나의 예약',
+    '소개 영상',
+    '운동 영상',
     '개인 설정',
   ];
 
   static const List<Widget> _widgetOptions = <Widget>[
     SchedulePage(),
     ReservationsPage(),
+    IntroducePage(),
+    WorkoutVideoPage(),
     SettingPage(),
   ];
 
@@ -41,6 +48,7 @@ class _HomePageState extends State<HomePage> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.schedule),
@@ -49,6 +57,14 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.book),
             label: '나의 예약',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.video_library),
+            label: '소개 영상',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.video_library),
+            label: '운동 영상',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
