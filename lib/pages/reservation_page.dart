@@ -54,8 +54,8 @@ class _ReservationsPageState extends State<ReservationsPage> {
           }
 
           if (snapshot.hasError) {
-            // DEBUG: return Center(child: Text('Error: ${snapshot.error}'));
-            return const Center(child: Text('오류가 발생했습니다'));
+            return Center(child: Text('Error: ${snapshot.error}'));
+            //return const Center(child: Text('오류가 발생했습니다'));
           }
 
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -99,13 +99,11 @@ class _ReservationsPageState extends State<ReservationsPage> {
   }
 
   Future<Map<DateTime, List<Workout>>> fetchReservationsGroupedByDate() async {
-    final now = DateTime.now().toUtc();
+    final now = DateTime.now().toUtc().add(Duration(hours: 9));
+    print('Now: $now');
     final res = await supabase
         .from('reservations')
         .select('''
-          id,
-          user_id,
-          workout_id,
           workouts(
           id,
           workout_name,
@@ -115,8 +113,12 @@ class _ReservationsPageState extends State<ReservationsPage> {
           )
          ''')
         .eq('user_id', supabase.auth.currentUser!.id)
-        .gte('workouts.start_time', now.toIso8601String());
-    List<Workout> workouts = res.map((e) => Workout.fromMap(e['workouts'])).toList();
+        .gte('workouts.start_time', now.toIso8601String()); // TODO: 지난 시간을 null로 가져온다.
+    print('Reservations: $res');
+    List<Workout> workouts = res
+        .where((e) => e['workouts'] != null) // workouts가 null인 데이터 제외
+        .map((e) => Workout.fromMap(e['workouts']))
+        .toList();
     Map<DateTime, List<Workout>> groupedWorkouts = {};
 
     for (var workout in workouts) {
@@ -131,6 +133,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
       }
       groupedWorkouts[workoutDate]!.add(workout);
     }
+    //print(groupedWorkouts);
     return groupedWorkouts;
   }
 
