@@ -99,8 +99,11 @@ class _ReservationsPageState extends State<ReservationsPage> {
   }
 
   Future<Map<DateTime, List<Workout>>> fetchReservationsGroupedByDate() async {
-    final now = DateTime.now().toUtc().add(Duration(hours: 9));
-    print('Now: $now');
+    // 오늘의 시작 시점 (한국 시간으로 00:00:00)
+    final todayStart = DateTime.now().toUtc().add(Duration(hours: 9)); // KST로 변환
+    final todayStartDate = DateTime(todayStart.year, todayStart.month, todayStart.day); // 오늘의 시작
+
+
     final res = await supabase
         .from('reservations')
         .select('''
@@ -113,12 +116,13 @@ class _ReservationsPageState extends State<ReservationsPage> {
           )
          ''')
         .eq('user_id', supabase.auth.currentUser!.id)
-        .gte('workouts.start_time', now.toIso8601String()); // TODO: 지난 시간을 null로 가져온다.
-    print('Reservations: $res');
+        .gte('workouts.start_time', todayStartDate.toIso8601String()); // TODO: 지난 시간을 null로 가져온다.
+
     List<Workout> workouts = res
         .where((e) => e['workouts'] != null) // workouts가 null인 데이터 제외
         .map((e) => Workout.fromMap(e['workouts']))
         .toList();
+
     Map<DateTime, List<Workout>> groupedWorkouts = {};
 
     for (var workout in workouts) {

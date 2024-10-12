@@ -30,6 +30,9 @@ class WorkoutTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final now = DateTime.now();
+    final isPast = startTime.isBefore(now);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Card(
@@ -61,7 +64,16 @@ class WorkoutTile extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  if (isReservationPage) ...[
+                  if (isPast) ...[
+                      const Text(
+                      '완료',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ] else if (isReservationPage) ...[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween, // 텍스트와 아이콘을 좌우로 배치
                       children: [
