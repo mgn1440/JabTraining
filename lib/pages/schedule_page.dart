@@ -71,7 +71,6 @@ class _SchedulePageState extends State<SchedulePage> {
     return response != null; // null이 아니면 예약된 상태
   }
 
-
   void _handleReserve(Workout workout) async {
     setState(() {
       _isLoading = true;
@@ -105,6 +104,27 @@ class _SchedulePageState extends State<SchedulePage> {
     }
   }
 
+  StartingDayOfWeek getStartingDayOfWeek() {
+    switch (DateTime.now().weekday) {
+      case DateTime.monday:
+        return StartingDayOfWeek.monday;
+      case DateTime.tuesday:
+        return StartingDayOfWeek.tuesday;
+      case DateTime.wednesday:
+        return StartingDayOfWeek.wednesday;
+      case DateTime.thursday:
+        return StartingDayOfWeek.thursday;
+      case DateTime.friday:
+        return StartingDayOfWeek.friday;
+      case DateTime.saturday:
+        return StartingDayOfWeek.saturday;
+      case DateTime.sunday:
+        return StartingDayOfWeek.sunday;
+      default:
+        return StartingDayOfWeek.monday; // 기본값 (안전장치)
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,6 +152,7 @@ class _SchedulePageState extends State<SchedulePage> {
             focusedDay: _focusedDay,
             firstDay: DateTime.now(), // 오늘 포함 7일 표시
             lastDay: DateTime.now().add(const Duration(days: 14)),
+            startingDayOfWeek: getStartingDayOfWeek(),
             calendarFormat: _calendarFormat,
             selectedDayPredicate: (day) {
               return isSameDay(_selectedDate, day);
@@ -169,13 +190,10 @@ class _SchedulePageState extends State<SchedulePage> {
                         child: Text('선택한 날짜의 운동 수업이 없습니다.'),
                       );
                     }
-
                     final workouts = snapshot.data!.where((workout) => workout.locationId == _selectedLocationId).toList();
-
                     if (workouts.isEmpty) {
                       return const Center(child: Text('선택한 날짜의 운동 수업이 없습니다.'),);
                     }
-
                     return ListView.builder(
                         itemCount: workouts.length,
                         itemBuilder: (context, index) {
@@ -190,9 +208,7 @@ class _SchedulePageState extends State<SchedulePage> {
                                 print('Error: ${snapshot.error}');
                                 return const Center(child: Text('오류가 발생했습니다!!'));
                               }
-
                               final isReserved = snapshot.data ?? false;
-
                               return WorkoutTile(
                                   workoutName: workout.workoutName,
                                   startTime: workout.startTime,
