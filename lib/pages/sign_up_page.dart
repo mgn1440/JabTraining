@@ -18,14 +18,12 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _redirecting = false;
   bool _isFormValid = false;
 
-  late final TextEditingController _nameController = TextEditingController();
-  late final TextEditingController _emailController = TextEditingController();
-  late final TextEditingController _phoneController = TextEditingController();
-  late final TextEditingController _passwordController =
-      TextEditingController();
-  late final TextEditingController _confirmPasswordController =
-      TextEditingController();
-  late final TextEditingController _birthController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _birthController = TextEditingController();
   String? _selectedGender;
 
   late final StreamSubscription<AuthState> _authStateSubscription;
