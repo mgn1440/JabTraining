@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jab_training/main.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileEditPage extends StatefulWidget {
   const ProfileEditPage({super.key});
@@ -8,8 +10,135 @@ class ProfileEditPage extends StatefulWidget {
 }
 
 class _ProfileEditPageState extends State<ProfileEditPage> {
+  final SupabaseClient supabase = Supabase.instance.client;
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _birthController = TextEditingController();
+  String? _selectedGender;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProfile();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _birthController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadUserProfile() async {
+    final User? user = supabase.auth.currentUser;
+    if (user != null) {
+      final profile = await supabase
+          .from('profiles')
+          .select()
+          .eq('id', user.id)
+          .single();
+      if (profile.isNotEmpty) {
+        setState(() {
+          _nameController.text = profile['name'] as String? ?? '';
+          _emailController.text = user.email ?? ''; // Supabase에서 로그인된 사용자의 이메일
+          _phoneController.text = profile['phone'] as String? ?? '';
+          _birthController.text = profile['birth'] as String? ?? '';
+          _selectedGender = profile['gender'] as String?; // 성별 초기값 설정
+        });
+      }
+    }
+  }
+
+  Future<void> _updateProfile() async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      await supabase
+          .from('profiles')
+          .update({
+        'name': _nameController.text,
+        'phone': _phoneController.text,
+        'birth': _birthController.text,
+        'gender': _selectedGender,
+      }).eq('id', supabase.auth.currentUser!.id);
+    } on AuthException catch (error) {
+      if (mounted) {
+        context.showSnackBar(error.message, isError: true);
+      }
+    } catch (error) {
+      if (mounted) {
+        context.showSnackBar('Unexpected error occured', isError: true);
+      }
+    }
+    finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('프로필 설정'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(labelText: '이름'),
+            ),
+            TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(labelText: '이메일'),
+              enabled: false, // 이메일 수정 불가
+            ),
+            TextField(
+              controller: _phoneController,
+              decoration: const InputDecoration(labelText: '전화번호'),
+              keyboardType: TextInputType.phone,
+            ),
+            TextField(
+              controller: _birthController,
+              decoration: const InputDecoration(labelText: '생년월일'),
+              keyboardType: TextInputType.datetime,
+            ),
+            DropdownButtonFormField<String>(
+              value: _selectedGender,
+              items: ['남성', '여성'].map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              decoration: const InputDecoration(labelText: '성별'),
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedGender = newValue;
+                });
+              },
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                _updateProfile();
+                Navigator.pop(context);
+              },
+              child: Text(_isLoading ? '로딩중...' : '저장'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

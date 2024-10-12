@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/pages/auth_gate.dart';
-import 'package:jab_training/main.dart';
+import 'package:jab_training/pages//profile_edit_page.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -44,7 +44,9 @@ class _SettingPageState extends State<SettingPage> {
       body: ListView(
         children: [
           _buildListTile('프로필 설정', () {
-            // 프로필 설정 페이지로 이동하는 로직
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const ProfileEditPage()),
+            );
           }),
           _buildListTile('정책 및 계약', () {
             // 정책 및 계약 페이지로 이동하는 로직
