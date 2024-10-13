@@ -134,9 +134,17 @@ class GymSelectSatate extends State<GymSelectPage>
               isEnabled: centerName.isNotEmpty,
               buttonType: ButtonType.filled,
               onPressed: () async {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const SignUpPage()),
-                );
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  final args = ModalRoute.of(context)?.settings.arguments;
+                  if (args == 'fromSignUp') {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => const SignUpPage()),
+                    );
+                  } else {
+                    Navigator.pop(context, centerName);
+                  }
+                });
               },
               child: const Text('선택'),
             ),
@@ -148,7 +156,7 @@ class GymSelectSatate extends State<GymSelectPage>
   }
 
   List<Widget> _buildCenterList() {
-    final centers = ['잽트레이닝 교대', '잽트레이닝 역삼', '잽트레이닝 선릉'];
+    final centers = ['잽트레이닝 교대점', '잽트레이닝 역삼점', '잽트레이닝 선릉점'];
     return centers.map((center) {
       final isSelected = center == centerName;
       return Theme(

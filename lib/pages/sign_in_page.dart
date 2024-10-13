@@ -112,7 +112,7 @@ class _SignInPageState extends State<SignInPage> {
             Expanded(
               child: ListView(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+                    const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
                 children: [
                   const SizedBox(height: 18),
                   TextFormField(
