@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jab_training/pages/sign_in_page.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:jab_training/pages/sign_up_page.dart';
 import 'package:jab_training/component/buttons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jab_training/pages/gym_select_page.dart';

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jab_training/models/workout.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/component/workout_reservation_component.dart';
+import 'package:jab_training/main.dart';
 
 class ReservationsPage extends StatefulWidget {
   const ReservationsPage({super.key});
@@ -24,12 +25,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
       _reservationsByDate = fetchReservationsGroupedByDate();
   }
 
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
-  }
-
   Future<void> _cancelReservation(String reservationId) async {
-    print('Canceling reservation: $reservationId');
     try {
        await supabase
           .from('reservations')
@@ -38,9 +34,13 @@ class _ReservationsPageState extends State<ReservationsPage> {
        setState(() {
          _loadReservations(); // 상태 업데이트를 위해 setState를 사용
        });
-        _showSnackBar('예약이 취소되었습니다.');
+       if (mounted) {
+         context.showSnackBar('예약이 취소되었습니다.', isError: false);
+       }
     } catch (e) {
-      _showSnackBar('예약 취소 중 오류가 발생했습니다.');
+      if (mounted) {
+        context.showSnackBar('예약 취소 중 오류가 발생했습니다.', isError: true);
+      }
     }
   }
 
