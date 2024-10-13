@@ -140,7 +140,7 @@ class GymSelectSatate extends State<GymSelectPage>
               },
               child: const Text('선택'),
             ),
-            const SizedBox(height: 77),
+            const SizedBox(height: 40),
           ],
         ),
       ),
@@ -148,7 +148,7 @@ class GymSelectSatate extends State<GymSelectPage>
   }
 
   List<Widget> _buildCenterList() {
-    final centers = ['센터1', '센터2', '센터3'];
+    final centers = ['잽트레이닝 교대', '잽트레이닝 역삼', '잽트레이닝 선릉'];
     return centers.map((center) {
       final isSelected = center == centerName;
       return Theme(
