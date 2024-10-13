@@ -5,6 +5,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/component/workout_reservation_component.dart';
 import 'package:jab_training/models/workout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:jab_training/provider/calendar_provider.dart';
+import 'package:provider/provider.dart';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
@@ -22,6 +24,7 @@ class _SchedulePageState extends State<SchedulePage> {
   bool _isLoading = false;
   String _currentLocation = '잽트레이닝 선릉점';
   int _selectedLocationId = 1;
+  late final calendarProvider = Provider.of<CalendarProvider>(context);
 
   int? getLocationIdByName(String name) {
     for (var location in _gymLocations) {
@@ -160,20 +163,18 @@ class _SchedulePageState extends State<SchedulePage> {
       body: Column(
         children: [
           TableCalendar(
-            focusedDay: _focusedDay,
+            focusedDay: calendarProvider.focusedDay,
             firstDay: DateTime.now(), // 오늘 포함 7일 표시
             lastDay: DateTime.now().add(const Duration(days: 14)),
             startingDayOfWeek: getStartingDayOfWeek(),
             calendarFormat: _calendarFormat,
             selectedDayPredicate: (day) {
-              return isSameDay(_selectedDate, day);
+              return isSameDay(calendarProvider.selectedDate, day);
             },
             onDaySelected: (selectedDay, focusedDay) {
-              if (!isSameDay(_selectedDate, selectedDay)) {
-                setState(() {
-                  _selectedDate = selectedDay;
-                  _focusedDay = focusedDay;
-                });
+              if (!isSameDay(calendarProvider.selectedDate, selectedDay)) {
+                calendarProvider.updateFocusedDay(focusedDay);
+                calendarProvider.updateSelectedDate(selectedDay);
               }
             },
             daysOfWeekVisible: true,
@@ -183,38 +184,34 @@ class _SchedulePageState extends State<SchedulePage> {
           ),
           const SizedBox(height: 20),
           Expanded(
-            child: StreamBuilder<List<Workout>>(
-                stream: getSelectDayWorkouts(_selectedDate ?? DateTime.now()),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error: ${snapshot.error.toString()}'),
-                    );
-                  }
-                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(
-                      child: Text('선택한 날짜의 운동 수업이 없습니다.'),
-                    );
-                  }
-                  final workouts = snapshot.data!
-                      .where((workout) =>
-                          workout.locationId == _selectedLocationId)
-                      .toList();
-                  if (workouts.isEmpty) {
-                    return const Center(
-                      child: Text('선택한 날짜의 운동 수업이 없습니다.'),
-                    );
-                  }
-                  return ListView.builder(
-                      itemCount: workouts.length,
-                      itemBuilder: (context, index) {
-                        final workout = workouts[index];
-                        return FutureBuilder<bool>(
+              child: StreamBuilder<List<Workout>>(
+                  stream: getSelectDayWorkouts(calendarProvider.selectedDate ?? DateTime.now()),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      print('Error: ${snapshot.error}');
+                      return Center(
+                        child: Text('Error: ${snapshot.error.toString()}'),
+                      );
+                    }
+                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(
+                        child: Text('선택한 날짜의 운동 수업이 없습니다.'),
+                      );
+                    }
+                    final workouts = snapshot.data!.where((workout) => workout.locationId == _selectedLocationId).toList();
+                    if (workouts.isEmpty) {
+                      return const Center(child: Text('선택한 날짜의 운동 수업이 없습니다.'),);
+                    }
+                    return ListView.builder(
+                        itemCount: workouts.length,
+                        itemBuilder: (context, index) {
+                         final workout = workouts[index];
+                          return FutureBuilder<bool>(
                             future: isWorkoutReserved(workout.id),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
