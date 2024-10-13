@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jab_training/const/color.dart';
 
 
 class WorkoutTile extends StatelessWidget {
@@ -104,9 +105,17 @@ class WorkoutTile extends StatelessWidget {
                     ),
                   ]
                   else if (isReserved == false) ...[
-                    ElevatedButton(
-                      onPressed: onReserve,
-                      child: const Text('예약하기'),
+                    SizedBox(
+                      width: 100,
+                      child: ElevatedButton(
+                        onPressed: onReserve,
+                        style: ElevatedButton.styleFrom(
+                            foregroundColor: primarySwatch[500],
+                            backgroundColor: Colors.transparent,
+                            side: BorderSide(color: primarySwatch[500]!, width: 1),
+                        ),
+                        child: const Text('예약하기'),
+                      ),
                     ),
                   ]
                   else ...[

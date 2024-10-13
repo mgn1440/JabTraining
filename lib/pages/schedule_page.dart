@@ -20,10 +20,8 @@ class _SchedulePageState extends State<SchedulePage> {
   final supabase = Supabase.instance.client;
   final CalendarFormat _calendarFormat = CalendarFormat.week;
   late SharedPreferences prefs;
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDate;
   bool _isLoading = false;
-  String _currentLocation = '잽트레이닝 선릉점';
+  String _currentLocation = '';
   int _selectedLocationId = 1;
   late final calendarProvider = Provider.of<CalendarProvider>(context);
 
@@ -51,9 +49,9 @@ class _SchedulePageState extends State<SchedulePage> {
   }
 
   final List<Map<String, dynamic>> _gymLocations = [
-    {'id': 1, 'name': '잽트레이닝 교대점'},
-    {'id': 2, 'name': '잽트레이닝 역삼점'},
-    {'id': 3, 'name': '잽트레이닝 선릉점'},
+    {'id': 1, 'name': '잽 트레이닝 교대점'},
+    {'id': 2, 'name': '잽 트레이닝 역삼점'},
+    {'id': 3, 'name': '잽 트레이닝 선릉점'},
   ];
 
   Stream<List<Workout>> getSelectDayWorkouts(DateTime date) {
@@ -146,21 +144,41 @@ class _SchedulePageState extends State<SchedulePage> {
     return Scaffold(
       appBar: AppBar(
           title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Icon(
-            Icons.location_on,
-            color: Colors.white,
-          ),
-          Text(_currentLocation!),
-          TextButton(
-              onPressed: _selectGymLocation,
-              child: const Text(
-                '바꾸기',
-                style: TextStyle(color: Colors.green),
-              ))
-        ],
-      )),
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.location_on,
+                    color: grayscaleSwatch[100],
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    _currentLocation,
+                    style: TextStyle(
+                      color: grayscaleSwatch[100],
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+
+                  ),
+                ],
+              ),
+            ),
+            TextButton(
+                onPressed: _selectGymLocation,
+                child: Text(
+                  '바꾸기',
+                  style: TextStyle(
+                      color: primarySwatch[500],
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                  ),
+                ))
+          ],
+        )
+      ),
       body: Column(
         children: [
           TableCalendar(
@@ -210,9 +228,9 @@ class _SchedulePageState extends State<SchedulePage> {
                       );
                     }
                     if (snapshot.hasError) {
-                      print('Error: ${snapshot.error}');
-                      return Center(
-                        child: Text('Error: ${snapshot.error.toString()}'),
+                      print('Error: ${snapshot.error}'); // DEBUG
+                      return const Center(
+                        child: Text('오류가 발생했습니다! 다시 시도해주세요.'),
                       );
                     }
                     if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -237,9 +255,9 @@ class _SchedulePageState extends State<SchedulePage> {
                                     child: CircularProgressIndicator());
                               }
                               if (snapshot.hasError) {
-                                print('Error: ${snapshot.error}');
+                                print('Error: ${snapshot.error}'); // DEBUG
                                 return const Center(
-                                    child: Text('오류가 발생했습니다!!'));
+                                    child: Text('오류가 발생했습니다! 다시 시도해주세요.'));
                               }
                               final isReserved = snapshot.data ?? false;
                               return WorkoutTile(

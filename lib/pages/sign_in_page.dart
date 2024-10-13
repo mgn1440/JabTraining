@@ -68,7 +68,6 @@ class _SignInPageState extends State<SignInPage> {
         if (_redirecting) return;
         final session = data.session;
         if (session != null) {
-          print('User is logged in');
           _redirecting = true;
           if (mounted) {
             Navigator.of(context).pushAndRemoveUntil(
