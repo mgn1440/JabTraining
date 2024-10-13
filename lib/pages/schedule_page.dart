@@ -3,6 +3,8 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/component/workout_reservation_component.dart';
 import 'package:jab_training/models/workout.dart';
+import 'package:jab_training/provider/calendar_provider.dart';
+import 'package:provider/provider.dart';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
@@ -14,9 +16,8 @@ class SchedulePage extends StatefulWidget {
 class _SchedulePageState extends State<SchedulePage> {
   final supabase = Supabase.instance.client;
   final CalendarFormat _calendarFormat = CalendarFormat.week;
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDate;
   bool _isLoading = false;
+  late final calendarProvider = Provider.of<CalendarProvider>(context);
 
   // TODO: 사용자가 선택한 체육관 정보 가져와야 함
   int _selectedLocationId = 2;
@@ -149,20 +150,18 @@ class _SchedulePageState extends State<SchedulePage> {
       body: Column(
         children: [
           TableCalendar(
-            focusedDay: _focusedDay,
+            focusedDay: calendarProvider.focusedDay,
             firstDay: DateTime.now(), // 오늘 포함 7일 표시
             lastDay: DateTime.now().add(const Duration(days: 14)),
             startingDayOfWeek: getStartingDayOfWeek(),
             calendarFormat: _calendarFormat,
             selectedDayPredicate: (day) {
-              return isSameDay(_selectedDate, day);
+              return isSameDay(calendarProvider.selectedDate, day);
             },
             onDaySelected: (selectedDay, focusedDay) {
-              if (!isSameDay(_selectedDate, selectedDay)) {
-                setState(() {
-                  _selectedDate = selectedDay;
-                  _focusedDay = focusedDay;
-                });
+              if (!isSameDay(calendarProvider.selectedDate, selectedDay)) {
+                calendarProvider.updateFocusedDay(focusedDay);
+                calendarProvider.updateSelectedDate(selectedDay);
               }
             },
             daysOfWeekVisible: true,
@@ -173,7 +172,7 @@ class _SchedulePageState extends State<SchedulePage> {
           const SizedBox(height: 20),
           Expanded(
               child: StreamBuilder<List<Workout>>(
-                  stream: getSelectDayWorkouts(_selectedDate ?? DateTime.now()),
+                  stream: getSelectDayWorkouts(calendarProvider.selectedDate ?? DateTime.now()),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
