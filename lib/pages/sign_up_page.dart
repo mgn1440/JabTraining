@@ -5,6 +5,7 @@ import 'package:jab_training/main.dart';
 import 'package:jab_training/pages/home_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/component/buttons.dart';
+import 'package:jab_training/pages/terms_policy_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -42,41 +43,71 @@ class _SignUpPageState extends State<SignUpPage> {
     });
   }
 
-  Future<void> _signUp() async {
+  Future<void> _onPressd() async {
+    if (!await _checkPassword()) return;
+    if (!await _checkEmail()) return;
+    if (!await _checkPhone()) return;
+    if (!await _checkBirth()) return;
+    _navigateToTermsPolicyPage();
+  }
+
+  Future<bool> _checkPassword() async {
     if (_passwordController.text != _confirmPasswordController.text) {
       context.showSnackBar('비밀번호가 일치하지 않습니다.', isError: true);
-      return;
+      return false;
     }
-    try {
-      setState(() {
-        _isLoading = true;
-      });
+    if (_passwordController.text.length < 6) {
+      context.showSnackBar('비밀번호는 7자 이상이어야 합니다.', isError: true);
+      return false;
+    }
+    return true;
+  }
 
-      await supabase.auth.signUp(
-        email: _emailController.text,
-        password: _passwordController.text,
-        data: {
-          'name': _nameController.text,
-          'phone': _phoneController.text,
-          'birth': _birthController.text,
-          'gender': _selectedGender,
-        },
-      );
-    } on AuthException catch (error) {
-      if (mounted) {
-        context.showSnackBar(error.message, isError: true);
-      }
-    } catch (error) {
-      if (mounted) {
-        context.showSnackBar('Unexpected error occured', isError: true);
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+  Future<bool> _checkEmail() async {
+    if (_emailController.text.contains('@') == false) {
+      context.showSnackBar('이메일 형식이 일치하지 않습니다.', isError: true);
+      return false;
     }
+    return true;
+  }
+
+  bool _isNum(String numString) {
+    final numRegex = RegExp(r'^\d+$');
+    return numRegex.hasMatch(numString);
+  }
+
+  Future<bool> _checkPhone() async {
+    if (_phoneController.text.length < 10 || !_isNum(_phoneController.text)) {
+      context.showSnackBar('전화번호 형식이 일치하지 않습니다.', isError: true);
+      return false;
+    }
+    return true;
+  }
+
+  Future<bool> _checkBirth() async {
+    if (_birthController.text.length < 8 || _birthController.text.length > 9) {
+      context.showSnackBar('생년월일 형식이 일치하지 않습니다.', isError: true);
+      return false;
+    }
+    return true;
+  }
+
+  void _navigateToTermsPolicyPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TermsPolicyPage(
+          email: _emailController.text,
+          password: _passwordController.text,
+          data: {
+            'name': _nameController.text,
+            'phone': _phoneController.text,
+            'birth': _birthController.text,
+            'gender': _selectedGender,
+          },
+        ),
+      ),
+    );
   }
 
   @override
@@ -219,9 +250,9 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
           ),
           CustomButton(
-            isEnabled: _isFormValid,
+            isEnabled: _isFormValid && !_isLoading,
             buttonType: ButtonType.filled,
-            onPressed: _signUp,
+            onPressed: _onPressd,
             child: Text(_isLoading ? '로딩중...' : "회원가입"),
           ),
           const SizedBox(height: 40),
