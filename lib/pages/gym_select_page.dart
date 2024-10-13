@@ -4,6 +4,7 @@ import 'package:jab_training/const/color.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jab_training/component/buttons.dart';
 import 'package:jab_training/pages/sign_up_page.dart';
+import 'package:jab_training/component/custom_app_bar.dart';
 
 class GymSelectPage extends StatefulWidget {
   const GymSelectPage({super.key});
@@ -56,16 +57,7 @@ class GymSelectSatate extends State<GymSelectPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('지점 선택'),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
+      appBar: const CustomAppBar(title: "지점선택", iconStat: true),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
