@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:jab_training/pages/gym_select_page.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/component/workout_reservation_component.dart';
 import 'package:jab_training/models/workout.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
@@ -14,18 +16,40 @@ class SchedulePage extends StatefulWidget {
 class _SchedulePageState extends State<SchedulePage> {
   final supabase = Supabase.instance.client;
   final CalendarFormat _calendarFormat = CalendarFormat.week;
+  late SharedPreferences prefs;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDate;
   bool _isLoading = false;
+  String _currentLocation = '잽트레이닝 선릉점';
+  int _selectedLocationId = 1;
 
-  // TODO: 사용자가 선택한 체육관 정보 가져와야 함
-  int _selectedLocationId = 2;
-  String _currentLocation = 'JabTraining 역삼점';
+  int? getLocationIdByName(String name) {
+    for (var location in _gymLocations) {
+      if (location['name'] == name) {
+        return location['id'] as int?;
+      }
+    }
+    return null; // 해당 이름의 지점이 없을 경우 null 반환
+  }
+
+  Future<void> initPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _currentLocation = prefs.getString('centerName') ?? '';
+      _selectedLocationId = getLocationIdByName(_currentLocation) ?? 1;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initPrefs();
+  }
 
   final List<Map<String, dynamic>> _gymLocations = [
-    {'id': 1, 'name': 'JabTraining 선릉점'},
-    {'id': 2, 'name': 'JabTraining 역삼점'},
-    {'id': 3, 'name': 'JabTraining 교대점'},
+    {'id': 1, 'name': '잽트레이닝 교대점'},
+    {'id': 2, 'name': '잽트레이닝 역삼점'},
+    {'id': 3, 'name': '잽트레이닝 선릉점'},
   ];
 
   Stream<List<Workout>> getSelectDayWorkouts(DateTime date) {
@@ -36,28 +60,18 @@ class _SchedulePageState extends State<SchedulePage> {
         .map((data) => (data as List).map((e) => Workout.fromMap(e)).toList());
   }
 
-  void _selectGymLocation() {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return ListView.builder(
-              itemCount: _gymLocations.length,
-              itemBuilder: (context, index) {
-                final location = _gymLocations[index];
-                return ListTile(
-                  title: Text(location['name'] as String),
-                  onTap: () {
-                    setState(() {
-                      _currentLocation = location['name'] as String;
-                      _selectedLocationId = location['id'] as int;
-                    });
-                    Navigator.pop(context);
-                  },
-                );
-              }
-          );
-        }
+  void _selectGymLocation() async {
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const GymSelectPage()),
     );
+
+    if (result != null && result is String) {
+      await prefs.setString('centerName', result);
+      setState(() {
+        _currentLocation = result;
+        _selectedLocationId = getLocationIdByName(result) ?? 1;
+      });
+    }
   }
 
   Future<bool> isWorkoutReserved(String workoutId) async {
@@ -82,11 +96,9 @@ class _SchedulePageState extends State<SchedulePage> {
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('예약이 완료되었습니다.'),
-            )
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('예약이 완료되었습니다.'),
+        ));
       }
     } catch (e) {
       if (mounted) {
@@ -98,9 +110,9 @@ class _SchedulePageState extends State<SchedulePage> {
         );
       }
     } finally {
-        setState(() {
-          _isLoading = false;
-        });
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -129,23 +141,22 @@ class _SchedulePageState extends State<SchedulePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Icon(
-              Icons.location_on,
-              color: Colors.white,
-            ),
-            Text(_currentLocation),
-            TextButton(
-                onPressed: _selectGymLocation,
-                child: const Text(
-                  '바꾸기',
-                  style: TextStyle(color: Colors.green),
-                ))
-          ],
-        )
-      ),
+          title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Icon(
+            Icons.location_on,
+            color: Colors.white,
+          ),
+          Text(_currentLocation!),
+          TextButton(
+              onPressed: _selectGymLocation,
+              child: const Text(
+                '바꾸기',
+                style: TextStyle(color: Colors.green),
+              ))
+        ],
+      )),
       body: Column(
         children: [
           TableCalendar(
@@ -172,59 +183,64 @@ class _SchedulePageState extends State<SchedulePage> {
           ),
           const SizedBox(height: 20),
           Expanded(
-              child: StreamBuilder<List<Workout>>(
-                  stream: getSelectDayWorkouts(_selectedDate ?? DateTime.now()),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    if (snapshot.hasError) {
-                      print('Error: ${snapshot.error}');
-                      return Center(
-                        child: Text('Error: ${snapshot.error.toString()}'),
-                      );
-                    }
-                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(
-                        child: Text('선택한 날짜의 운동 수업이 없습니다.'),
-                      );
-                    }
-                    final workouts = snapshot.data!.where((workout) => workout.locationId == _selectedLocationId).toList();
-                    if (workouts.isEmpty) {
-                      return const Center(child: Text('선택한 날짜의 운동 수업이 없습니다.'),);
-                    }
-                    return ListView.builder(
-                        itemCount: workouts.length,
-                        itemBuilder: (context, index) {
-                         final workout = workouts[index];
-                          return FutureBuilder<bool>(
+            child: StreamBuilder<List<Workout>>(
+                stream: getSelectDayWorkouts(_selectedDate ?? DateTime.now()),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${snapshot.error.toString()}'),
+                    );
+                  }
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(
+                      child: Text('선택한 날짜의 운동 수업이 없습니다.'),
+                    );
+                  }
+                  final workouts = snapshot.data!
+                      .where((workout) =>
+                          workout.locationId == _selectedLocationId)
+                      .toList();
+                  if (workouts.isEmpty) {
+                    return const Center(
+                      child: Text('선택한 날짜의 운동 수업이 없습니다.'),
+                    );
+                  }
+                  return ListView.builder(
+                      itemCount: workouts.length,
+                      itemBuilder: (context, index) {
+                        final workout = workouts[index];
+                        return FutureBuilder<bool>(
                             future: isWorkoutReserved(workout.id),
                             builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return const Center(child: CircularProgressIndicator());
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
                               }
                               if (snapshot.hasError) {
-                                return const Center(child: Text('오류가 발생했습니다!!'));
+                                print('Error: ${snapshot.error}');
+                                return const Center(
+                                    child: Text('오류가 발생했습니다!!'));
                               }
                               final isReserved = snapshot.data ?? false;
                               return WorkoutTile(
-                                  workoutName: workout.workoutName,
-                                  startTime: workout.startTime,
-                                  duration: workout.duration,
-                                  onReserve: _isLoading
+                                workoutName: workout.workoutName,
+                                startTime: workout.startTime,
+                                duration: workout.duration,
+                                onReserve: _isLoading
                                     ? () => {}
                                     : () => _handleReserve(workout),
-                                  locationId: workout.locationId,
-                                  isReserved: isReserved,
+                                locationId: workout.locationId,
+                                isReserved: isReserved,
                               );
-                            }
-                          );
-                        }
-                    );
-                  }
-              ),
+                            });
+                      });
+                }),
           )
         ],
       ),

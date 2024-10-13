@@ -5,7 +5,6 @@ import 'package:jab_training/pages/reservation_page.dart';
 import 'package:jab_training/pages/introduce_page.dart';
 import 'package:jab_training/pages/workout_video_page.dart';
 
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -43,6 +42,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_titles[_selectedIndex]),
+        centerTitle: true,
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
