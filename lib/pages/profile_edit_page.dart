@@ -91,6 +91,13 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('프로필 설정'),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Column(
         children: [
@@ -144,6 +151,9 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                     ),
                   ),
                   const SizedBox(height: 282),
+                  // TODO: 뉴스 및 프로모션 알림
+                  // TODO: Unsubscribe from everything
+                  // TODO: 계정 삭제 요청
                 ],
               )
           ),

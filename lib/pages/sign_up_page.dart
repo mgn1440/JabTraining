@@ -69,11 +69,9 @@ class _SignUpPageState extends State<SignUpPage> {
         context.showSnackBar('Unexpected error occured', isError: true);
       }
     } finally {
-      if (mounted) {
         setState(() {
           _isLoading = false;
         });
-      }
     }
   }
 
