@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:jab_training/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:jab_training/component/buttons.dart';
+import 'package:jab_training/const/color.dart';
 
 class ProfileEditPage extends StatefulWidget {
   const ProfileEditPage({super.key});
@@ -89,55 +91,83 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('프로필 설정'),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(labelText: '이름'),
-            ),
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: '이메일'),
-              enabled: false, // 이메일 수정 불가
-            ),
-            TextField(
-              controller: _phoneController,
-              decoration: const InputDecoration(labelText: '전화번호'),
-              keyboardType: TextInputType.phone,
-            ),
-            TextField(
-              controller: _birthController,
-              decoration: const InputDecoration(labelText: '생년월일'),
-              keyboardType: TextInputType.datetime,
-            ),
-            DropdownButtonFormField<String>(
-              value: _selectedGender,
-              items: ['남성', '여성'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              decoration: const InputDecoration(labelText: '성별'),
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedGender = newValue;
-                });
-              },
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
+      body: Column(
+        children: [
+          Expanded(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
+                children: [
+                  const SizedBox(height: 18),
+                  TextField(
+                    controller: _nameController,
+                    cursorColor: grayscaleSwatch[100],
+                    decoration: const InputDecoration(labelText: '이름'),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _emailController,
+                    cursorColor: grayscaleSwatch[100],
+                    decoration: const InputDecoration(labelText: '이메일'),
+                    enabled: false, // 이메일 수정 불가
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _phoneController,
+                    cursorColor: grayscaleSwatch[100],
+                    keyboardType: TextInputType.phone,
+                    decoration: const InputDecoration(labelText: '전화번호'),
+                  ),
+                  const SizedBox(height: 12),
+                  DropdownButtonFormField<String>(
+                    value: _selectedGender,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedGender = newValue;
+                      });
+                    },
+                    decoration: const InputDecoration(labelText: '성별'),
+                    items: ['남성', '여성'].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _birthController,
+                    cursorColor: grayscaleSwatch[100],
+                    keyboardType: TextInputType.datetime,
+                    decoration: const InputDecoration(
+                        labelText: '생년월일 (YYYY-MM-DD)',
+                    ),
+                  ),
+                  const SizedBox(height: 282),
+                  // TODO: 뉴스 및 프로모션 알림
+                  // TODO: Unsubscribe from everything
+                  // TODO: 계정 삭제 요청
+                ],
+              )
+          ),
+          CustomButton(
+              isEnabled: true,
+              buttonType: ButtonType.filled,
+              onPressed: () async {
                 _updateProfile();
                 Navigator.pop(context);
               },
-              child: Text(_isLoading ? '로딩중...' : '저장'),
-            ),
-          ],
-        ),
+              child: Text(_isLoading ? '로딩중...' : '완료'),
+          ),
+          const SizedBox(height: 40),
+        ],
       ),
     );
   }

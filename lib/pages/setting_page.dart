@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/pages/auth_gate.dart';
 import 'package:jab_training/pages//profile_edit_page.dart';
+import 'package:jab_training/pages//password_edit_page.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -52,7 +53,9 @@ class _SettingPageState extends State<SettingPage> {
             // 정책 및 계약 페이지로 이동하는 로직
           }),
           _buildListTile('비밀번호 바꾸기', () {
-            // 비밀번호 변경 페이지로 이동하는 로직
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const PasswordEditPage()),
+            );
           }),
           _buildListTile('로그아웃', _signOut),
           _buildListTile('회원탈퇴', () {

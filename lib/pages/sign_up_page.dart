@@ -177,27 +177,21 @@ class _SignUpPageState extends State<SignUpPage> {
                 TextFormField(
                   controller: _nameController,
                   cursorColor: grayscaleSwatch[100],
-                  decoration: const InputDecoration(
-                    labelText: '이름',
-                  ),
+                  decoration: const InputDecoration(labelText: '이름'),
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _emailController,
                   cursorColor: grayscaleSwatch[100],
                   keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: '이메일 주소',
-                  ),
+                  decoration: const InputDecoration(labelText: '이메일 주소'),
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _phoneController,
                   cursorColor: grayscaleSwatch[100],
                   keyboardType: TextInputType.phone,
-                  decoration: const InputDecoration(
-                    labelText: '전화번호',
-                  ),
+                  decoration: const InputDecoration(labelText: '전화번호'),
                 ),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<String>(
@@ -207,9 +201,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       _selectedGender = value;
                     });
                   },
-                  decoration: const InputDecoration(
-                    labelText: '성별',
-                  ),
+                  decoration: const InputDecoration(labelText: '성별'),
                   items: <String>['남성', '여성'].map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,

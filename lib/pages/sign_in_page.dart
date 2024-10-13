@@ -18,9 +18,8 @@ class _SignInPageState extends State<SignInPage> {
   bool _redirecting = false;
   bool _isFormValid = false;
 
-  late final TextEditingController _emailController = TextEditingController();
-  late final TextEditingController _passwordController =
-      TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   late final StreamSubscription<AuthState> _authStateSubscription;
 

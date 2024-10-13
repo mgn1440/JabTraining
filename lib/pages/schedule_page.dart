@@ -181,6 +181,7 @@ class _SchedulePageState extends State<SchedulePage> {
                       );
                     }
                     if (snapshot.hasError) {
+                      print('Error: ${snapshot.error}');
                       return Center(
                         child: Text('Error: ${snapshot.error.toString()}'),
                       );
@@ -205,7 +206,6 @@ class _SchedulePageState extends State<SchedulePage> {
                                 return const Center(child: CircularProgressIndicator());
                               }
                               if (snapshot.hasError) {
-                                print('Error: ${snapshot.error}');
                                 return const Center(child: Text('오류가 발생했습니다!!'));
                               }
                               final isReserved = snapshot.data ?? false;
