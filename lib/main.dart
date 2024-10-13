@@ -4,8 +4,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/pages/auth_gate.dart';
 import 'package:jab_training/pages/home_page.dart';
 import 'package:jab_training/const/color.dart';
-import 'package:jab_training/provider/calendar_provider.dart';
-import 'package:provider/provider.dart';
 
 Future<void> main() async {
   await dotenv.load();
@@ -27,6 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Supabase Flutter',
       theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: background,
         inputDecorationTheme: InputDecorationTheme(
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: grayscaleSwatch[100]!),
@@ -51,10 +50,7 @@ class MyApp extends StatelessWidget {
       ),
       home: supabase.auth.currentSession == null
           ? const AuthGate()
-          : ChangeNotifierProvider(
-          create: (context) => CalendarProvider(),
-          child: const HomePage(),
-      )
+          : const HomePage(),
     );
   }
 }

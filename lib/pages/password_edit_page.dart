@@ -3,7 +3,7 @@ import 'package:jab_training/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/component/buttons.dart';
 import 'package:jab_training/const/color.dart';
-
+import 'package:jab_training/component/custom_app_bar.dart';
 
 class PasswordEditPage extends StatefulWidget {
   const PasswordEditPage({super.key});
@@ -14,9 +14,11 @@ class PasswordEditPage extends StatefulWidget {
 
 class _PasswordEditPageState extends State<PasswordEditPage> {
   final SupabaseClient supabase = Supabase.instance.client;
-  final TextEditingController _currentPasswordController = TextEditingController();
+  final TextEditingController _currentPasswordController =
+      TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmNewPasswordController = TextEditingController();
+  final TextEditingController _confirmNewPasswordController =
+      TextEditingController();
   bool _isLoading = false;
   bool _isFormValid = false;
 
@@ -72,7 +74,7 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
         if (mounted) {
           context.showSnackBar('현재 사용자 정보를 확인할 수 없습니다.', isError: true);
         }
-        return ;
+        return;
       }
 
       await supabase.auth.updateUser(
@@ -104,147 +106,56 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
       setState(() {
         _isLoading = false;
       });
-  }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('비밀번호 바꾸기'),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
-                children: [
-                  const SizedBox(height: 18),
-                  TextField(
-                    controller: _currentPasswordController,
-                    cursorColor: grayscaleSwatch[100],
-                    decoration: const InputDecoration(
-                      labelText: '현재 비밀번호',
-                    ),
-                    obscureText: true,
+        appBar: const CustomAppBar(title: '비밀번호 변경', iconStat: true),
+        body: Column(
+          children: [
+            Expanded(
+                child: ListView(
+              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
+              children: [
+                const SizedBox(height: 18),
+                TextField(
+                  controller: _currentPasswordController,
+                  cursorColor: grayscaleSwatch[100],
+                  decoration: const InputDecoration(
+                    labelText: '현재 비밀번호',
                   ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: _newPasswordController,
-                    cursorColor: grayscaleSwatch[100],
-                    decoration: const InputDecoration(
-                      labelText: '새 비밀번호',
-                    ),
-                    obscureText: true,
+                  obscureText: true,
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _newPasswordController,
+                  cursorColor: grayscaleSwatch[100],
+                  decoration: const InputDecoration(
+                    labelText: '새 비밀번호',
                   ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: _confirmNewPasswordController,
-                    cursorColor: grayscaleSwatch[100],
-                    decoration: const InputDecoration(
-                      labelText: '새 비밀번호 확인',
-                    ),
-                    obscureText: true,
+                  obscureText: true,
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _confirmNewPasswordController,
+                  cursorColor: grayscaleSwatch[100],
+                  decoration: const InputDecoration(
+                    labelText: '새 비밀번호 확인',
                   ),
-                ],
-              )
-          ),
-          CustomButton(
+                  obscureText: true,
+                ),
+              ],
+            )),
+            CustomButton(
               isEnabled: _isFormValid,
               buttonType: ButtonType.filled,
               onPressed: () async => await _updatePassword(),
               child: Text(_isLoading ? '로딩중...' : '비밀번호 바꾸기'),
-          ),
-          const SizedBox(height: 40),
-        ],
-      )
-    );
+            ),
+            const SizedBox(height: 40),
+          ],
+        ));
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
