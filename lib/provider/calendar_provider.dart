@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CalendarProvider with ChangeNotifier {
   DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDate;
+  DateTime _selectedDate = DateTime.now();
 
   DateTime get focusedDay => _focusedDay;
   DateTime? get selectedDate => _selectedDate;
@@ -12,7 +12,7 @@ class CalendarProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateSelectedDate(DateTime? day) {
+  void updateSelectedDate(DateTime day) {
     _selectedDate = day;
     notifyListeners();
   }

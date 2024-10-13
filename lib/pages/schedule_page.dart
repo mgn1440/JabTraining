@@ -5,6 +5,7 @@ import 'package:jab_training/component/workout_reservation_component.dart';
 import 'package:jab_training/models/workout.dart';
 import 'package:jab_training/provider/calendar_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:jab_training/const/color.dart';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
@@ -150,11 +151,17 @@ class _SchedulePageState extends State<SchedulePage> {
       body: Column(
         children: [
           TableCalendar(
+            headerVisible: false, // 년도와 달 뜨는 헤더
+            daysOfWeekHeight: 50,
             focusedDay: calendarProvider.focusedDay,
             firstDay: DateTime.now(), // 오늘 포함 7일 표시
             lastDay: DateTime.now().add(const Duration(days: 14)),
             startingDayOfWeek: getStartingDayOfWeek(),
             calendarFormat: _calendarFormat,
+            daysOfWeekStyle: DaysOfWeekStyle(
+              weekdayStyle: TextStyle(color: grayscaleSwatch[100]),
+              weekendStyle: TextStyle(color: grayscaleSwatch[100]),
+            ),
             selectedDayPredicate: (day) {
               return isSameDay(calendarProvider.selectedDate, day);
             },
@@ -164,9 +171,19 @@ class _SchedulePageState extends State<SchedulePage> {
                 calendarProvider.updateSelectedDate(selectedDay);
               }
             },
-            daysOfWeekVisible: true,
             headerStyle: const HeaderStyle(
               formatButtonVisible: false,
+            ),
+            calendarStyle: CalendarStyle(
+              todayDecoration: const BoxDecoration(),
+              selectedDecoration: BoxDecoration(
+                color: primarySwatch[500],
+                shape: BoxShape.circle,
+              ),
+              todayTextStyle: TextStyle(color: grayscaleSwatch[100]),
+              weekendTextStyle: TextStyle(color: grayscaleSwatch[100]),
+              defaultTextStyle: TextStyle(color: grayscaleSwatch[100]),
+              selectedTextStyle: const TextStyle(color: Colors.black),
             ),
           ),
           const SizedBox(height: 20),

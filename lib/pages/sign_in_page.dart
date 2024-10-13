@@ -5,6 +5,8 @@ import 'package:jab_training/const/color.dart';
 import 'package:jab_training/main.dart';
 import 'package:jab_training/pages/home_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:jab_training/provider/calendar_provider.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -66,10 +68,19 @@ class _SignInPageState extends State<SignInPage> {
         if (_redirecting) return;
         final session = data.session;
         if (session != null) {
+          print('User is logged in');
           _redirecting = true;
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const HomePage()),
-          );
+          if (mounted) {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => ChangeNotifierProvider(
+                  create: (context) => CalendarProvider(),
+                  child: const HomePage(),
+                ),
+              ),
+              (Route<dynamic> route) => false, // 모든 스택을 제거
+            );
+          }
         }
       },
       onError: (error) {

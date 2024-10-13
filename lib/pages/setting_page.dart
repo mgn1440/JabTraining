@@ -16,9 +16,11 @@ class _SettingPageState extends State<SettingPage> {
     final supabase = Supabase.instance.client;
     try {
       await supabase.auth.signOut();
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const AuthGate()),
-      );
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const AuthGate()),
+        );
+      }
     } on AuthException catch (error) {
       if (mounted) {
         _showSnackBar(error.message, isError: true);
