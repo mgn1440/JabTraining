@@ -49,34 +49,46 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.schedule),
-            label: '스케줄',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: '나의 예약',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.video_file),
-            label: '소개 영상',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.video_library),
-            label: '운동 영상',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: '개인 설정',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: primarySwatch[500],
-        backgroundColor: background,
-        onTap: _onItemTapped,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: const Offset(0, -3), // 그림자의 방향을 위쪽으로 설정
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.schedule),
+              label: '스케줄',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.book),
+              label: '나의 예약',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.video_file),
+              label: '소개 영상',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.video_library),
+              label: '운동 영상',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: '개인 설정',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: primarySwatch[500],
+          backgroundColor: background,
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }
