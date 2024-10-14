@@ -33,7 +33,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         elevation: 0, // AppBar의 기본 elevation 제거
         leading: iconStat
             ? IconButton(
-                icon: const Icon(Icons.arrow_back),
+                icon: const Icon(Icons.arrow_back_ios_new),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
