@@ -125,7 +125,7 @@ class WorkoutTile extends StatelessWidget {
                       onPressed: onReserve,
                       style: ElevatedButton.styleFrom(
                           foregroundColor: primarySwatch[500],
-                          backgroundColor: Colors.transparent,
+                          backgroundColor: background,
                           side: BorderSide(color: primarySwatch[500]!, width: 1),
                       ),
                       child: const Text('예약하기'),

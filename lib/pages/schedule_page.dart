@@ -144,6 +144,7 @@ class _SchedulePageState extends State<SchedulePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: background,
           title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
