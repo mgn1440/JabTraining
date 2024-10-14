@@ -79,43 +79,68 @@ class WorkoutTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 if (isPast) ...[
-                    const Text(
-                    '완료',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ] else if (isReservationPage) ...[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween, // 텍스트와 아이콘을 좌우로 배치
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start, // 텍스트 정렬
-                        children: [
-                          Text(
-                            _gymLocations[locationId - 1],
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                          Text(
-                            '예약됨',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: primarySwatch[500],
-                            ),
-                          ),
-                        ],
-                      ),
-                      IconButton(
-                        onPressed: onReserve,
-                        icon: const Icon(
-                          Icons.cancel,
+                    const SizedBox(
+                      width: 100,
+                      child: Center(
+                        child: Text(
+                          '완료',
+                        style: TextStyle(
+                          fontSize: 14,
                           color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ],
+                    ),
+                ] else if (isReservationPage) ...[
+                  SizedBox(
+                    width: 100,
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end, // 텍스트 정렬
+                            children: [
+                              Text(
+                                _gymLocations[locationId - 1],
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    size: 16,
+                                    Icons.check,
+                                    color: primarySwatch[500],
+                                  ),
+                                  const SizedBox(width: 3),
+                                  Text(
+                                    '예약됨',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: primarySwatch[500],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: onReserve,
+                          icon: const Icon(
+                            Icons.close,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ]
                 else if (isReserved == false) ...[
