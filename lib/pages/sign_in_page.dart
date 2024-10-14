@@ -4,6 +4,7 @@ import 'package:jab_training/component/buttons.dart';
 import 'package:jab_training/const/color.dart';
 import 'package:jab_training/main.dart';
 import 'package:jab_training/pages/home_page.dart';
+import 'package:jab_training/component/custom_app_bar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:jab_training/provider/calendar_provider.dart';
@@ -108,15 +109,7 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('로그인'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ),
+        appBar: const CustomAppBar(title: '로그인', iconStat: true),
         body: Column(
           children: [
             Expanded(

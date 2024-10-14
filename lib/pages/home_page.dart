@@ -5,6 +5,7 @@ import 'package:jab_training/pages/reservation_page.dart';
 import 'package:jab_training/pages/introduce_page.dart';
 import 'package:jab_training/pages/workout_video_page.dart';
 import 'package:jab_training/const/color.dart';
+import 'package:jab_training/component/custom_app_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -41,9 +42,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_titles[_selectedIndex]),
-        centerTitle: true,
+      appBar: CustomAppBar(
+        title: _titles[_selectedIndex],
+        iconStat: false,
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),

@@ -6,6 +6,7 @@ import 'package:jab_training/pages/home_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/component/buttons.dart';
 import 'package:jab_training/pages/terms_policy_page.dart';
+import 'package:jab_training/component/custom_app_bar.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -23,7 +24,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final TextEditingController _birthController = TextEditingController();
   String? _selectedGender;
 
@@ -157,16 +159,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('회원가입'),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
+      appBar: const CustomAppBar(title: "회원가입", iconStat: true),
       body: Column(
         children: [
           Expanded(
