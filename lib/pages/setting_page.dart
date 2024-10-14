@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/pages/auth_gate.dart';
 import 'package:jab_training/pages//profile_edit_page.dart';
 import 'package:jab_training/pages//password_edit_page.dart';
+import 'package:jab_training/pages/terms_policy_show_page.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -51,8 +52,10 @@ class _SettingPageState extends State<SettingPage> {
               MaterialPageRoute(builder: (context) => const ProfileEditPage()),
             );
           }),
-          _buildListTile('정책 및 계약', () {
-            // 정책 및 계약 페이지로 이동하는 로직
+          _buildListTile('서비스 약관', () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => TermsPolicyShowPage()),
+            );
           }),
           _buildListTile('비밀번호 바꾸기', () {
             Navigator.of(context).push(

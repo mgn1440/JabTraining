@@ -144,43 +144,41 @@ class _SchedulePageState extends State<SchedulePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: background,
+          backgroundColor: background,
           title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.location_on,
-                    color: grayscaleSwatch[100],
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    _currentLocation,
-                    style: TextStyle(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.location_on,
                       color: grayscaleSwatch[100],
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
                     ),
-
-                  ),
-                ],
+                    const SizedBox(width: 8),
+                    Text(
+                      _currentLocation,
+                      style: TextStyle(
+                        color: grayscaleSwatch[100],
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            TextButton(
-                onPressed: _selectGymLocation,
-                child: Text(
-                  '바꾸기',
-                  style: TextStyle(
+              TextButton(
+                  onPressed: _selectGymLocation,
+                  child: Text(
+                    '바꾸기',
+                    style: TextStyle(
                       color: primarySwatch[500],
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                  ),
-                ))
-          ],
-        )
-      ),
+                    ),
+                  ))
+            ],
+          )),
       body: Column(
         children: [
           TableCalendar(
@@ -221,64 +219,70 @@ class _SchedulePageState extends State<SchedulePage> {
           ),
           const SizedBox(height: 20),
           Expanded(
-            child : StreamBuilder<List<Workout>>(
-                stream: getSelectDayWorkouts(calendarProvider.selectedDate ?? DateTime.now()),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  if (snapshot.hasError) {
-                    print('Error: ${snapshot.error}'); // DEBUG
-                    return const Center(
-                      child: Text('오류가 발생했습니다! 다시 시도해주세요.'),
-                    );
-                  }
-                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(
-                      child: Text('선택한 날짜의 운동 수업이 없습니다.'),
-                    );
-                  }
-                  final workouts = snapshot.data!.where((workout) => workout.locationId == _selectedLocationId).toList();
-                  if (workouts.isEmpty) {
-                    return const Center(child: Text('선택한 날짜의 운동 수업이 없습니다.'),);
-                  }
-                  return ListView.separated(
-                      itemCount: workouts.length,
-                      separatorBuilder: (context, index) => Divider(
-                        height: 1,
-                        color: grayscaleSwatch[400],
-                      ),
-                      itemBuilder: (context, index) {
-                       final workout = workouts[index];
-                        return FutureBuilder<bool>(
-                          future: isWorkoutReserved(workout.id),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            }
-                            if (snapshot.hasError) {
-                              print('Error: ${snapshot.error}'); // DEBUG
-                              return const Center(
-                                  child: Text('오류가 발생했습니다! 다시 시도해주세요.'));
-                            }
-                            final isReserved = snapshot.data ?? false;
-                            return WorkoutTile(
-                              workoutName: workout.workoutName,
-                              startTime: workout.startTime.toLocal(),
-                              duration: workout.duration,
-                              onReserve: _isLoading
-                                  ? () => {}
-                                  : () => _handleReserve(workout),
-                              locationId: workout.locationId,
-                              isReserved: isReserved,
-                            );
-                          });
-                    });
-              })
-          ),
+              child: StreamBuilder<List<Workout>>(
+                  stream: getSelectDayWorkouts(
+                      calendarProvider.selectedDate ?? DateTime.now()),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      print('Error: ${snapshot.error}'); // DEBUG
+                      return const Center(
+                        child: Text('오류가 발생했습니다! 다시 시도해주세요.'),
+                      );
+                    }
+                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(
+                        child: Text('선택한 날짜의 운동 수업이 없습니다.'),
+                      );
+                    }
+                    final workouts = snapshot.data!
+                        .where((workout) =>
+                            workout.locationId == _selectedLocationId)
+                        .toList();
+                    if (workouts.isEmpty) {
+                      return const Center(
+                        child: Text('선택한 날짜의 운동 수업이 없습니다.'),
+                      );
+                    }
+                    return ListView.separated(
+                        itemCount: workouts.length,
+                        separatorBuilder: (context, index) => Divider(
+                              height: 1,
+                              color: grayscaleSwatch[400],
+                            ),
+                        itemBuilder: (context, index) {
+                          final workout = workouts[index];
+                          return FutureBuilder<bool>(
+                              future: isWorkoutReserved(workout.id),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                }
+                                if (snapshot.hasError) {
+                                  print('Error: ${snapshot.error}'); // DEBUG
+                                  return const Center(
+                                      child: Text('오류가 발생했습니다! 다시 시도해주세요.'));
+                                }
+                                final isReserved = snapshot.data ?? false;
+                                return WorkoutTile(
+                                  workoutName: workout.workoutName,
+                                  startTime: workout.startTime.toLocal(),
+                                  duration: workout.duration,
+                                  onReserve: _isLoading
+                                      ? () => {}
+                                      : () => _handleReserve(workout),
+                                  locationId: workout.locationId,
+                                  isReserved: isReserved,
+                                );
+                              });
+                        });
+                  })),
         ],
       ),
     );
