@@ -29,108 +29,138 @@ class WorkoutTile extends StatelessWidget {
     '교대점',
   ];
 
+  String formattedTime() {
+    int hour = startTime.hour;
+    String period = hour >= 12 ? 'PM' : 'AM';
+
+    // 12를 초과하는 경우 12를 빼고 0이 되는 경우 12로 설정
+    if (hour > 12) {
+      hour -= 12;
+    } else if (hour == 0) {
+      hour = 12; // 0시를 12시로 변환
+    }
+
+    return '$hour:${startTime.minute.toString().padLeft(2, '0')} $period';
+  }
+
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
     final isPast = startTime.isBefore(now);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Card(
-        elevation: 3,
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${startTime.hour}:${startTime.minute.toString().padLeft(2, '0')}',
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    '$duration분',
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Text(
-                workoutName,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-              const Spacer(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  if (isPast) ...[
-                      const Text(
-                      '완료',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                      ),
+    return Card(
+      color: background,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  formattedTime(),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  '$duration min',
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
+            const Spacer(),
+            Text(
+              workoutName,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
+            const Spacer(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                if (isPast) ...[
+                    const Text(
+                    '완료',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ] else if (isReservationPage) ...[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween, // 텍스트와 아이콘을 좌우로 배치
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start, // 텍스트 정렬
-                          children: [
-                            Text(
-                              _gymLocations[locationId - 1],
-                              style: const TextStyle(fontSize: 14),
+                  ),
+                ] else if (isReservationPage) ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween, // 텍스트와 아이콘을 좌우로 배치
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start, // 텍스트 정렬
+                        children: [
+                          Text(
+                            _gymLocations[locationId - 1],
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                          Text(
+                            '예약됨',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: primarySwatch[500],
                             ),
-                            const Text(
+                          ),
+                        ],
+                      ),
+                      IconButton(
+                        onPressed: onReserve,
+                        icon: const Icon(
+                          Icons.cancel,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                ]
+                else if (isReserved == false) ...[
+                  SizedBox(
+                    width: 100,
+                    child: ElevatedButton(
+                      onPressed: onReserve,
+                      style: ElevatedButton.styleFrom(
+                          foregroundColor: primarySwatch[500],
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: primarySwatch[500]!, width: 1),
+                      ),
+                      child: const Text('예약하기'),
+                    ),
+                  ),
+                ]
+                else ...[
+                    SizedBox(
+                      width: 100,
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              size: 16,
+                              Icons.check,
+                              color: primarySwatch[500],
+                            ),
+                            const SizedBox(width: 3),
+                            Text(
                               '예약됨',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
+                                color: primarySwatch[500],
                               ),
                             ),
                           ],
                         ),
-                        IconButton(
-                          onPressed: onReserve,
-                          icon: const Icon(
-                            Icons.cancel,
-                            color: Colors.red,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ]
-                  else if (isReserved == false) ...[
-                    SizedBox(
-                      width: 100,
-                      child: ElevatedButton(
-                        onPressed: onReserve,
-                        style: ElevatedButton.styleFrom(
-                            foregroundColor: primarySwatch[500],
-                            backgroundColor: Colors.transparent,
-                            side: BorderSide(color: primarySwatch[500]!, width: 1),
-                        ),
-                        child: const Text('예약하기'),
                       ),
                     ),
-                  ]
-                  else ...[
-                      const Text(
-                        '예약됨',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.green,
-                        ),
-                      ),
-                  ],
                 ],
-              )
-            ],
-          ),
+              ],
+            )
+          ],
         ),
       ),
     );

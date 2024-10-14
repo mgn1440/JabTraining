@@ -59,6 +59,7 @@ class _SchedulePageState extends State<SchedulePage> {
         .from('workouts')
         .stream(primaryKey: ['id'])
         .eq('workout_date', date.toIso8601String().split('T')[0])
+        .order('start_time', ascending: true)
         .map((data) => (data as List).map((e) => Workout.fromMap(e)).toList());
   }
 
@@ -219,61 +220,64 @@ class _SchedulePageState extends State<SchedulePage> {
           ),
           const SizedBox(height: 20),
           Expanded(
-              child: StreamBuilder<List<Workout>>(
-                  stream: getSelectDayWorkouts(calendarProvider.selectedDate ?? DateTime.now()),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    if (snapshot.hasError) {
-                      print('Error: ${snapshot.error}'); // DEBUG
-                      return const Center(
-                        child: Text('오류가 발생했습니다! 다시 시도해주세요.'),
-                      );
-                    }
-                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(
-                        child: Text('선택한 날짜의 운동 수업이 없습니다.'),
-                      );
-                    }
-                    final workouts = snapshot.data!.where((workout) => workout.locationId == _selectedLocationId).toList();
-                    if (workouts.isEmpty) {
-                      return const Center(child: Text('선택한 날짜의 운동 수업이 없습니다.'),);
-                    }
-                    return ListView.builder(
-                        itemCount: workouts.length,
-                        itemBuilder: (context, index) {
-                         final workout = workouts[index];
-                          return FutureBuilder<bool>(
-                            future: isWorkoutReserved(workout.id),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              }
-                              if (snapshot.hasError) {
-                                print('Error: ${snapshot.error}'); // DEBUG
-                                return const Center(
-                                    child: Text('오류가 발생했습니다! 다시 시도해주세요.'));
-                              }
-                              final isReserved = snapshot.data ?? false;
-                              return WorkoutTile(
-                                workoutName: workout.workoutName,
-                                startTime: workout.startTime,
-                                duration: workout.duration,
-                                onReserve: _isLoading
-                                    ? () => {}
-                                    : () => _handleReserve(workout),
-                                locationId: workout.locationId,
-                                isReserved: isReserved,
-                              );
-                            });
-                      });
-                }),
-          )
+            child : StreamBuilder<List<Workout>>(
+                stream: getSelectDayWorkouts(calendarProvider.selectedDate ?? DateTime.now()),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    print('Error: ${snapshot.error}'); // DEBUG
+                    return const Center(
+                      child: Text('오류가 발생했습니다! 다시 시도해주세요.'),
+                    );
+                  }
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(
+                      child: Text('선택한 날짜의 운동 수업이 없습니다.'),
+                    );
+                  }
+                  final workouts = snapshot.data!.where((workout) => workout.locationId == _selectedLocationId).toList();
+                  if (workouts.isEmpty) {
+                    return const Center(child: Text('선택한 날짜의 운동 수업이 없습니다.'),);
+                  }
+                  return ListView.separated(
+                      itemCount: workouts.length,
+                      separatorBuilder: (context, index) => Divider(
+                        height: 1,
+                        color: grayscaleSwatch[400],
+                      ),
+                      itemBuilder: (context, index) {
+                       final workout = workouts[index];
+                        return FutureBuilder<bool>(
+                          future: isWorkoutReserved(workout.id),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            }
+                            if (snapshot.hasError) {
+                              print('Error: ${snapshot.error}'); // DEBUG
+                              return const Center(
+                                  child: Text('오류가 발생했습니다! 다시 시도해주세요.'));
+                            }
+                            final isReserved = snapshot.data ?? false;
+                            return WorkoutTile(
+                              workoutName: workout.workoutName,
+                              startTime: workout.startTime.toLocal(),
+                              duration: workout.duration,
+                              onReserve: _isLoading
+                                  ? () => {}
+                                  : () => _handleReserve(workout),
+                              locationId: workout.locationId,
+                              isReserved: isReserved,
+                            );
+                          });
+                    });
+              })
+          ),
         ],
       ),
     );

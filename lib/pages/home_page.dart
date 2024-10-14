@@ -4,6 +4,7 @@ import 'package:jab_training/pages/schedule_page.dart';
 import 'package:jab_training/pages/reservation_page.dart';
 import 'package:jab_training/pages/introduce_page.dart';
 import 'package:jab_training/pages/workout_video_page.dart';
+import 'package:jab_training/const/color.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -59,7 +60,7 @@ class _HomePageState extends State<HomePage> {
             label: '나의 예약',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.video_library),
+            icon: Icon(Icons.video_file),
             label: '소개 영상',
           ),
           BottomNavigationBarItem(
@@ -72,7 +73,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.green,
+        selectedItemColor: primarySwatch[500],
         onTap: _onItemTapped,
       ),
     );
