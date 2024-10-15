@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jab_training/provider/calendar_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:jab_training/const/color.dart';
+import 'dart:async';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
@@ -24,6 +25,20 @@ class _SchedulePageState extends State<SchedulePage> {
   String _currentLocation = '';
   int _selectedLocationId = 1;
   late final calendarProvider = Provider.of<CalendarProvider>(context);
+
+  void startDayChangeListener() {
+    Timer.periodic(const Duration(minutes: 1), (timer) {
+      DateTime now = DateTime.now(); // 현재는 무조건 캘린더 범위의 첫 날
+      DateTime currentFocusedDay = calendarProvider.focusedDay;
+
+      // 자정을 지나 현재 날짜가 범위에서 벗어난 경우, focusedDay를 업데이트
+      if (currentFocusedDay.isBefore(now)) {
+        // 현재 날짜가 자정을 지나면 currentFocusedDay를 오늘 날짜로 업데이트
+        calendarProvider.updateFocusedDay(now);
+        calendarProvider.updateSelectedDate(now);
+      }
+    });
+  }
 
   int? getLocationIdByName(String name) {
     for (var location in _gymLocations) {
@@ -46,6 +61,7 @@ class _SchedulePageState extends State<SchedulePage> {
   void initState() {
     super.initState();
     initPrefs();
+    startDayChangeListener();
   }
 
   final List<Map<String, dynamic>> _gymLocations = [
