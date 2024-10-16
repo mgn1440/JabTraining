@@ -6,8 +6,10 @@ import 'package:jab_training/component/workout_reservation_component.dart';
 import 'package:jab_training/models/workout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jab_training/provider/calendar_provider.dart';
+import 'package:jab_training/provider/location_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:jab_training/const/color.dart';
+import 'package:jab_training/component/gym_select_app_bar.dart';
 import 'dart:async';
 
 class SchedulePage extends StatefulWidget {
@@ -18,13 +20,14 @@ class SchedulePage extends StatefulWidget {
 }
 
 class _SchedulePageState extends State<SchedulePage> {
+  bool _isInit = false;
   final supabase = Supabase.instance.client;
   final CalendarFormat _calendarFormat = CalendarFormat.week;
   late SharedPreferences prefs;
   bool _isLoading = false;
-  String _currentLocation = '';
-  int _selectedLocationId = 1;
   late final calendarProvider = Provider.of<CalendarProvider>(context);
+  late LocationProvider locationProvider =
+      Provider.of<LocationProvider>(context);
 
   void startDayChangeListener() {
     Timer.periodic(const Duration(minutes: 1), (timer) {
@@ -40,35 +43,21 @@ class _SchedulePageState extends State<SchedulePage> {
     });
   }
 
-  int? getLocationIdByName(String name) {
-    for (var location in _gymLocations) {
-      if (location['name'] == name) {
-        return location['id'] as int?;
-      }
-    }
-    return null; // 해당 이름의 지점이 없을 경우 null 반환
-  }
-
-  Future<void> initPrefs() async {
-    prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _currentLocation = prefs.getString('centerName') ?? '';
-      _selectedLocationId = getLocationIdByName(_currentLocation) ?? 1;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    initPrefs();
     startDayChangeListener();
   }
 
-  final List<Map<String, dynamic>> _gymLocations = [
-    {'id': 1, 'name': '잽 트레이닝 교대점'},
-    {'id': 2, 'name': '잽 트레이닝 역삼점'},
-    {'id': 3, 'name': '잽 트레이닝 선릉점'},
-  ];
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInit) {
+      // locationProvider = Provider.of<LocationProvider>(context);
+      locationProvider.initialize();
+      _isInit = !_isInit;
+    }
+  }
 
   Stream<List<Workout>> getSelectDayWorkouts(DateTime date) {
     return supabase
@@ -85,11 +74,9 @@ class _SchedulePageState extends State<SchedulePage> {
     );
 
     if (result != null && result is String) {
+      prefs = await SharedPreferences.getInstance();
       await prefs.setString('centerName', result);
-      setState(() {
-        _currentLocation = result;
-        _selectedLocationId = getLocationIdByName(result) ?? 1;
-      });
+      locationProvider.updateCurrentLocation(result);
     }
   }
 
@@ -159,42 +146,7 @@ class _SchedulePageState extends State<SchedulePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          backgroundColor: background,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.location_on,
-                      color: grayscaleSwatch[100],
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      _currentLocation,
-                      style: TextStyle(
-                        color: grayscaleSwatch[100],
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              TextButton(
-                  onPressed: _selectGymLocation,
-                  child: Text(
-                    '바꾸기',
-                    style: TextStyle(
-                      color: primarySwatch[500],
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ))
-            ],
-          )),
+      appBar: GymSelectAppBar(),
       body: Column(
         children: [
           TableCalendar(
@@ -257,7 +209,8 @@ class _SchedulePageState extends State<SchedulePage> {
                     }
                     final workouts = snapshot.data!
                         .where((workout) =>
-                            workout.locationId == _selectedLocationId)
+                            workout.locationId ==
+                            locationProvider.currentLocationId)
                         .toList();
                     if (workouts.isEmpty) {
                       return const Center(

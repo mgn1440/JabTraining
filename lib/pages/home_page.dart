@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jab_training/pages/setting_page.dart';
 import 'package:jab_training/pages/schedule_page.dart';
 import 'package:jab_training/pages/reservation_page.dart';
-import 'package:jab_training/pages/introduce_page.dart';
+import 'package:jab_training/pages/equipment_page.dart';
 import 'package:jab_training/pages/workout_video_page.dart';
 import 'package:jab_training/const/color.dart';
 import 'package:jab_training/component/custom_app_bar.dart';
@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
   static const List<Widget> _widgetOptions = <Widget>[
     SchedulePage(),
     ReservationsPage(),
-    IntroducePage(),
+    EquipmentPage(),
     WorkoutVideoPage(),
     SettingPage(),
   ];

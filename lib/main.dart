@@ -6,6 +6,7 @@ import 'package:jab_training/pages/home_page.dart';
 import 'package:jab_training/const/color.dart';
 import 'package:jab_training/provider/calendar_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:jab_training/provider/location_provider.dart';
 
 Future<void> main() async {
   await dotenv.load();
@@ -24,38 +25,41 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Supabase Flutter',
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: background,
-        inputDecorationTheme: InputDecorationTheme(
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: grayscaleSwatch[100]!),
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: grayscaleSwatch[100]!),
-          ),
-          labelStyle: TextStyle(color: grayscaleSwatch[100]),
-        ),
-        primaryColor: Colors.green,
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            foregroundColor: Colors.green,
-          ),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white,
-            backgroundColor: Colors.green,
-          ),
-        ),
-      ),
-      home: supabase.auth.currentSession == null
-          ? const AuthGate()
-          : ChangeNotifierProvider(
-              create: (context) => CalendarProvider(),
-              child: const HomePage(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => CalendarProvider()),
+        ChangeNotifierProvider(create: (context) => LocationProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Supabase Flutter',
+        theme: ThemeData.dark().copyWith(
+          scaffoldBackgroundColor: background,
+          inputDecorationTheme: InputDecorationTheme(
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: grayscaleSwatch[100]!),
             ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: grayscaleSwatch[100]!),
+            ),
+            labelStyle: TextStyle(color: grayscaleSwatch[100]),
+          ),
+          primaryColor: Colors.green,
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.green,
+            ),
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.green,
+            ),
+          ),
+        ),
+        home: supabase.auth.currentSession == null
+            ? const AuthGate()
+            : const HomePage(),
+      ),
     );
   }
 }
