@@ -10,6 +10,7 @@ import 'package:jab_training/provider/location_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:jab_training/const/color.dart';
 import 'package:jab_training/component/gym_select_app_bar.dart';
+import 'dart:async';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
@@ -28,9 +29,24 @@ class _SchedulePageState extends State<SchedulePage> {
   late LocationProvider locationProvider =
       Provider.of<LocationProvider>(context);
 
+  void startDayChangeListener() {
+    Timer.periodic(const Duration(minutes: 1), (timer) {
+      DateTime now = DateTime.now(); // 현재는 무조건 캘린더 범위의 첫 날
+      DateTime currentFocusedDay = calendarProvider.focusedDay;
+
+      // 자정을 지나 현재 날짜가 범위에서 벗어난 경우, focusedDay를 업데이트
+      if (currentFocusedDay.isBefore(now)) {
+        // 현재 날짜가 자정을 지나면 currentFocusedDay를 오늘 날짜로 업데이트
+        calendarProvider.updateFocusedDay(now);
+        calendarProvider.updateSelectedDate(now);
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    startDayChangeListener();
   }
 
   @override
@@ -131,52 +147,6 @@ class _SchedulePageState extends State<SchedulePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GymSelectAppBar(),
-      // appBar: PreferredSize(
-      //   preferredSize: const Size.fromHeight(54),
-      //   child: AppBar(
-      //     backgroundColor: background,
-      //     title: Consumer<LocationProvider>(
-      //       builder: (context, locationProvider, child) {
-      //         return Center(
-      //           child: Row(
-      //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //             children: [
-      //               Expanded(
-      //                 child: Row(
-      //                   children: [
-      //                     Icon(
-      //                       Icons.location_on,
-      //                       color: grayscaleSwatch[100],
-      //                     ),
-      //                     const SizedBox(width: 8),
-      //                     Text(
-      //                       locationProvider.currentLocation,
-      //                       style: TextStyle(
-      //                         color: grayscaleSwatch[100],
-      //                         fontSize: 16,
-      //                         fontWeight: FontWeight.w600,
-      //                       ),
-      //                     ),
-      //                   ],
-      //                 ),
-      //               ),
-      //               TextButton(
-      //                   onPressed: _selectGymLocation,
-      //                   child: Text(
-      //                     '바꾸기',
-      //                     style: TextStyle(
-      //                       color: primarySwatch[500],
-      //                       fontSize: 14,
-      //                       fontWeight: FontWeight.w600,
-      //                     ),
-      //                   ))
-      //             ],
-      //           ),
-      //         );
-      //       },
-      //     ),
-      //   ),
-      // ),
       body: Column(
         children: [
           TableCalendar(

@@ -3,6 +3,7 @@ import 'package:jab_training/models/workout.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/component/workout_reservation_component.dart';
 import 'package:jab_training/main.dart';
+import 'package:jab_training/const/color.dart';
 
 class ReservationsPage extends StatefulWidget {
   const ReservationsPage({super.key});
@@ -71,7 +72,15 @@ class _ReservationsPageState extends State<ReservationsPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                      AppBar(
-                       title: Text(_formatDate(date)),
+                       backgroundColor: grayscaleSwatch[500],
+                       title: Text(
+                           _formatDate(date),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                       ),
                        automaticallyImplyLeading: false,
                      ),
                     ListView.builder(
