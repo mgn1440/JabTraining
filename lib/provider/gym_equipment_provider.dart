@@ -37,12 +37,12 @@ class GymEquipmentsProvider extends ChangeNotifier {
   }
 
   Future<List<dynamic>> getEquipmentsData(int locationId) async {
-    // final lastFetchTime = await getLastFetchTime();
-    // final now = DateTime.now();
+    final lastFetchTime = await getLastFetchTime();
+    final now = DateTime.now();
 
-    // if (lastFetchTime == null || now.difference(lastFetchTime).inDays >= 1) {
-    await fetchAndSaveEquipmentsData(locationId);
-    // }
+    if (lastFetchTime == null || now.difference(lastFetchTime).inDays >= 1) {
+      await fetchAndSaveEquipmentsData(locationId);
+    }
 
     final prefs = await SharedPreferences.getInstance();
     final equipmentsData = prefs.getString(_equipmentsDataKey);
