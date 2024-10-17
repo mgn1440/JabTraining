@@ -92,7 +92,7 @@ class EquipmentCardState extends State<EquipmentCard> {
 }
 
 class EquipmentGrid extends StatelessWidget {
-  final List<Map<String, String>> equipmentList;
+  final List<Map<String, dynamic>> equipmentList;
 
   EquipmentGrid({required this.equipmentList});
 
