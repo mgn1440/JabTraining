@@ -29,26 +29,6 @@ class _SchedulePageState extends State<SchedulePage> {
   late LocationProvider locationProvider =
       Provider.of<LocationProvider>(context);
 
-  void startDayChangeListener() {
-    Timer.periodic(const Duration(minutes: 1), (timer) {
-      DateTime now = DateTime.now(); // 현재는 무조건 캘린더 범위의 첫 날
-      DateTime currentFocusedDay = calendarProvider.focusedDay;
-
-      // 자정을 지나 현재 날짜가 범위에서 벗어난 경우, focusedDay를 업데이트
-      if (currentFocusedDay.isBefore(now)) {
-        // 현재 날짜가 자정을 지나면 currentFocusedDay를 오늘 날짜로 업데이트
-        calendarProvider.updateFocusedDay(now);
-        calendarProvider.updateSelectedDate(now);
-      }
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    startDayChangeListener();
-  }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -155,6 +135,7 @@ class _SchedulePageState extends State<SchedulePage> {
             focusedDay: calendarProvider.focusedDay,
             firstDay: DateTime.now(), // 오늘 포함 7일 표시
             lastDay: DateTime.now().add(const Duration(days: 14)),
+            rangeStartDay: DateTime.now().subtract(const Duration(days: 1)),
             startingDayOfWeek: getStartingDayOfWeek(),
             calendarFormat: _calendarFormat,
             daysOfWeekStyle: DaysOfWeekStyle(
@@ -174,7 +155,9 @@ class _SchedulePageState extends State<SchedulePage> {
               formatButtonVisible: false,
             ),
             calendarStyle: CalendarStyle(
-              todayDecoration: const BoxDecoration(),
+              todayDecoration: const BoxDecoration(
+                shape: BoxShape.circle,
+              ),
               selectedDecoration: BoxDecoration(
                 color: primarySwatch[500],
                 shape: BoxShape.circle,
