@@ -158,7 +158,7 @@ class WorkoutTile extends StatelessWidget {
                     ),
                   ),
                 ]
-                else ...[
+                else ...[ // 스케줄 페이지에서 예약된 경우
                     SizedBox(
                       width: 100,
                       child: Center(

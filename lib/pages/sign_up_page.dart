@@ -104,6 +104,7 @@ class _SignUpPageState extends State<SignUpPage> {
             'phone': _phoneController.text,
             'birth': _birthController.text,
             'gender': _selectedGender,
+            'first_check_in': false,
           },
         ),
       ),
