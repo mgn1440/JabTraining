@@ -7,6 +7,7 @@ import 'package:jab_training/const/color.dart';
 import 'package:jab_training/provider/calendar_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:jab_training/provider/location_provider.dart';
+import 'package:jab_training/provider/gym_equipment_provider.dart';
 
 Future<void> main() async {
   await dotenv.load();
@@ -29,6 +30,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => CalendarProvider()),
         ChangeNotifierProvider(create: (context) => LocationProvider()),
+        ChangeNotifierProvider(
+            create: (context) => GymEquipmentsProvider(supabase)),
       ],
       child: MaterialApp(
         title: 'Supabase Flutter',
