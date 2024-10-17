@@ -155,7 +155,9 @@ class _SchedulePageState extends State<SchedulePage> {
               formatButtonVisible: false,
             ),
             calendarStyle: CalendarStyle(
-              todayDecoration: const BoxDecoration(),
+              todayDecoration: const BoxDecoration(
+                shape: BoxShape.circle,
+              ),
               selectedDecoration: BoxDecoration(
                 color: primarySwatch[500],
                 shape: BoxShape.circle,
