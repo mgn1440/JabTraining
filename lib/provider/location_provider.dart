@@ -20,7 +20,6 @@ class LocationProvider with ChangeNotifier {
         prefs.getString('centerName') ?? _gymLocations[0]['name'];
     _currentLocationId = _gymLocations
         .firstWhere((loc) => loc['name'] == _currentLocation)['id'];
-    print(_currentLocation);
     notifyListeners();
   }
 
