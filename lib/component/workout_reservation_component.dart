@@ -149,7 +149,7 @@ class WorkoutTile extends StatelessWidget {
                   SizedBox(
                     width: 100,
                     child: ElevatedButton(
-                      onPressed: () async => handleReservation(context, onReserve),
+                      onPressed: () async => handleReservation(context, onReserve, workoutName, startTime, duration, locationId),
                       style: ElevatedButton.styleFrom(
                           foregroundColor: primarySwatch[500],
                           backgroundColor: background,
