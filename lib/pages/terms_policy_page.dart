@@ -26,7 +26,6 @@ class TermsPolicyPageState extends State<TermsPolicyPage> {
   bool _isLoading = false;
 
   Future<void> _signUp() async {
-    print(widget.data);
     try {
       setState(() {
         _isLoading = true;
