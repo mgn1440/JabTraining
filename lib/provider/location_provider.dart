@@ -9,9 +9,9 @@ class LocationProvider with ChangeNotifier {
   int get currentLocationId => _currentLocationId;
 
   final List<Map<String, dynamic>> _gymLocations = [
-    {'id': 1, 'name': '잽 트레이닝 교대점'},
-    {'id': 2, 'name': '잽 트레이닝 역삼점'},
-    {'id': 3, 'name': '잽 트레이닝 선릉점'},
+    {'id': 1, 'name': 'Jab Training 교대점'},
+    {'id': 2, 'name': 'Jab Training 역삼점'},
+    {'id': 3, 'name': 'Jab Training 선릉점'},
   ];
 
   Future<void> initialize() async {
@@ -19,7 +19,8 @@ class LocationProvider with ChangeNotifier {
     _currentLocation =
         prefs.getString('centerName') ?? _gymLocations[0]['name'];
     _currentLocationId = _gymLocations
-        .firstWhere((loc) => loc['name'] == _currentLocation)['id'];
+            .firstWhere((loc) => loc['name'] == _currentLocation)['id'] ??
+        1;
     notifyListeners();
   }
 
