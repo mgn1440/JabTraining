@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jab_training/component/reservation_modal_handler.dart';
 import 'package:jab_training/const/color.dart';
 
 
@@ -148,7 +149,7 @@ class WorkoutTile extends StatelessWidget {
                   SizedBox(
                     width: 100,
                     child: ElevatedButton(
-                      onPressed: onReserve,
+                      onPressed: () async => handleReservation(context, onReserve),
                       style: ElevatedButton.styleFrom(
                           foregroundColor: primarySwatch[500],
                           backgroundColor: background,

@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:jab_training/const/color.dart';
 import 'package:jab_training/component/gym_select_app_bar.dart';
 import 'dart:async';
+import 'package:jab_training/component/reservation_modal_handler.dart';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
