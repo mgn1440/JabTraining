@@ -25,6 +25,7 @@ class TermsPolicyPage extends StatefulWidget {
 class TermsPolicyPageState extends State<TermsPolicyPage> {
   bool _isTermsChecked = false;
   bool _isPrivacyChecked = false;
+  bool _isOver14Checked = false;
   bool _isLoading = false;
   final TermsPolicyProvider _termsPolicyProvider =
       TermsPolicyProvider(supabase);
@@ -295,9 +296,33 @@ class TermsPolicyPageState extends State<TermsPolicyPage> {
                 ),
               ],
             ),
+            Row(
+              children: <Widget>[
+                Checkbox(
+                  value: _isOver14Checked,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _isOver14Checked = value ?? false;
+                    });
+                  },
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isOver14Checked = !_isOver14Checked;
+                    });
+                  },
+                  child: const Text('만 14세 이상입니다.'),
+                ),
+                Expanded(child: Container()),
+              ],
+            ),
             Expanded(child: Container()),
             CustomButton(
-              isEnabled: _isTermsChecked && _isPrivacyChecked && !_isLoading,
+              isEnabled: _isTermsChecked &&
+                  _isPrivacyChecked &&
+                  _isOver14Checked &&
+                  !_isLoading,
               onPressed: _signUp,
               buttonType: ButtonType.filled,
               child: const Text('동의'),
