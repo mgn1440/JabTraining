@@ -134,9 +134,8 @@ class _SchedulePageState extends State<SchedulePage> {
             headerVisible: false, // 년도와 달 뜨는 헤더
             daysOfWeekHeight: 50,
             focusedDay: calendarProvider.focusedDay,
-            firstDay: DateTime.now(), // 오늘 포함 7일 표시
+            firstDay: DateTime.now().subtract(const Duration(days: 1)), // 오늘 포함 7일 표시
             lastDay: DateTime.now().add(const Duration(days: 14)),
-            rangeStartDay: DateTime.now().subtract(const Duration(days: 1)),
             startingDayOfWeek: getStartingDayOfWeek(),
             calendarFormat: _calendarFormat,
             daysOfWeekStyle: DaysOfWeekStyle(
