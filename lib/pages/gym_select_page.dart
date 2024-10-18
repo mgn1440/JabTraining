@@ -148,7 +148,11 @@ class GymSelectSatate extends State<GymSelectPage>
   }
 
   List<Widget> _buildCenterList() {
-    final centers = ['잽 트레이닝 교대점', '잽 트레이닝 역삼점', '잽 트레이닝 선릉점'];
+    final centers = [
+      'Jab Training 교대점',
+      'Jab Training 역삼점',
+      'Jab Training 선릉점'
+    ];
     return centers.map((center) {
       final isSelected = center == centerName;
       return Theme(
