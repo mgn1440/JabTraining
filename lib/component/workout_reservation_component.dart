@@ -32,14 +32,12 @@ class WorkoutTile extends StatelessWidget {
   String formattedTime() {
     int hour = startTime.hour;
     String period = hour >= 12 ? 'PM' : 'AM';
-
     // 12를 초과하는 경우 12를 빼고 0이 되는 경우 12로 설정
     if (hour > 12) {
       hour -= 12;
     } else if (hour == 0) {
       hour = 12; // 0시를 12시로 변환
     }
-
     return '$hour:${startTime.minute.toString().padLeft(2, '0')} $period';
   }
 
@@ -97,46 +95,49 @@ class WorkoutTile extends StatelessWidget {
                     width: 100,
                     child: Row(
                       children: [
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end, // 텍스트 정렬
-                            children: [
-                              Text(
-                                _gymLocations[locationId - 1],
-                                style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end, // 텍스트 정렬
+                          children: [
+                            Text(
+                              _gymLocations[locationId - 1],
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                               ),
-                              const SizedBox(height: 4),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    size: 16,
-                                    Icons.check,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  size: 16,
+                                  Icons.check,
+                                  color: primarySwatch[500],
+                                ),
+                                const SizedBox(width: 2),
+                                Text(
+                                  '예약됨',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
                                     color: primarySwatch[500],
                                   ),
-                                  const SizedBox(width: 3),
-                                  Text(
-                                    '예약됨',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: primarySwatch[500],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                        IconButton(
-                          onPressed: onReserve,
-                          icon: const Icon(
-                            Icons.close,
-                            color: Colors.red,
+                        Flexible(
+                          fit: FlexFit.tight,
+                          child: IconButton(
+                            onPressed: onReserve,
+                            icon: const Icon(
+                              Icons.close,
+                              color: Colors.red,
+                            ),
                           ),
                         ),
                       ],
@@ -157,7 +158,7 @@ class WorkoutTile extends StatelessWidget {
                     ),
                   ),
                 ]
-                else ...[
+                else ...[ // 스케줄 페이지에서 예약된 경우
                     SizedBox(
                       width: 100,
                       child: Center(

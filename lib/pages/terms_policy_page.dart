@@ -41,6 +41,7 @@ class TermsPolicyPageState extends State<TermsPolicyPage> {
   }
 
   Future<void> _signUp() async {
+    print(widget.data);
     try {
       setState(() {
         _isLoading = true;
@@ -53,6 +54,7 @@ class TermsPolicyPageState extends State<TermsPolicyPage> {
       );
     } on AuthException catch (error) {
       if (mounted) {
+        print(error.message);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(error.message),
