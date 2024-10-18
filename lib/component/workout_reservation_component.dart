@@ -25,9 +25,9 @@ class WorkoutTile extends StatelessWidget {
   });
 
   final List<String> _gymLocations = const [
-    '선릉점',
-    '역삼점',
     '교대점',
+    '역삼점',
+    '선릉점',
   ];
 
   String formattedTime() {
