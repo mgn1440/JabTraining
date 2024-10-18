@@ -84,9 +84,24 @@ class _SignUpPageState extends State<SignUpPage> {
     return true;
   }
 
+  bool _isOver14YearsOld(String birthDateString) {
+    final birthDate = DateTime.parse(birthDateString);
+    final today = DateTime.now();
+    final age = today.year - birthDate.year;
+    if (today.month < birthDate.month ||
+        (today.month == birthDate.month && today.day < birthDate.day)) {
+      return age > 14;
+    }
+    return age >= 14;
+  }
+
   Future<bool> _checkBirth() async {
     if (_birthController.text.length < 8 || _birthController.text.length > 9) {
       context.showSnackBar('생년월일 형식이 일치하지 않습니다.', isError: true);
+      return false;
+    }
+    if (_isOver14YearsOld(_birthController.text) == false) {
+      context.showSnackBar('만 14세 이상만 가입 가능합니다.', isError: true);
       return false;
     }
     return true;
