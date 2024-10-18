@@ -4,6 +4,8 @@ import 'package:jab_training/component/buttons.dart';
 import 'package:jab_training/const/color.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/main.dart';
+import 'package:jab_training/provider/terms_policy_provider.dart';
+import 'package:jab_training/component/custom_app_bar.dart';
 
 class TermsPolicyPage extends StatefulWidget {
   final String email;
@@ -24,6 +26,19 @@ class TermsPolicyPageState extends State<TermsPolicyPage> {
   bool _isTermsChecked = false;
   bool _isPrivacyChecked = false;
   bool _isLoading = false;
+  final TermsPolicyProvider _termsPolicyProvider =
+      TermsPolicyProvider(supabase);
+
+  late Future<String> _termsText;
+  late Future<String> _policyText;
+
+  @override
+  void initState() {
+    super.initState();
+    _termsPolicyProvider.updateTermsAndPrivacyPolicy();
+    _termsText = _termsPolicyProvider.getTerms();
+    _policyText = _termsPolicyProvider.getPrivacyPolicy();
+  }
 
   Future<void> _signUp() async {
     print(widget.data);
@@ -65,80 +80,139 @@ class TermsPolicyPageState extends State<TermsPolicyPage> {
     }
   }
 
-  void _showDialog(String title, String content) {
+  void _showDialog(String title, Future<String> content) {
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
       pageBuilder: (BuildContext context, Animation<double> animation,
           Animation<double> secondaryAnimation) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(viewInsets: EdgeInsets.zero),
-          child: Scaffold(
-            backgroundColor: Colors.transparent,
-            body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Center(
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.6,
-                  padding: const EdgeInsets.fromLTRB(0, 24, 0, 0),
-                  margin: const EdgeInsets.all(0),
-                  decoration: BoxDecoration(
-                    color: background,
-                    borderRadius: BorderRadius.circular(15.0),
+        return FutureBuilder(
+          future: content,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return AlertDialog(
+                contentPadding: EdgeInsets.zero,
+                title: Text(title),
+                content: const CircularProgressIndicator(),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('닫기'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                        child: Text(
-                          title,
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                ],
+              );
+            } else if (snapshot.hasError) {
+              return AlertDialog(
+                contentPadding: EdgeInsets.zero,
+                title: Text(title),
+                content: Text('Error: ${snapshot.error}'),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('닫기',
+                        style: TextStyle(color: grayscaleSwatch[600])),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return AlertDialog(
+                contentPadding: EdgeInsets.zero,
+                title: Text(title),
+                content: const Text('No content available.'),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('닫기',
+                        style: TextStyle(color: grayscaleSwatch[600])),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            } else {
+              return MediaQuery(
+                data: MediaQuery.of(context).copyWith(
+                    padding: EdgeInsets.zero,
+                    viewInsets: EdgeInsets.zero,
+                    viewPadding: EdgeInsets.zero),
+                child: Scaffold(
+                  backgroundColor: Colors.transparent,
+                  body: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Center(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.6,
+                        padding: const EdgeInsets.fromLTRB(0, 24, 0, 0),
+                        margin: const EdgeInsets.all(0),
+                        decoration: BoxDecoration(
+                          color: background,
+                          borderRadius: BorderRadius.circular(15.0),
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: SingleChildScrollView(
-                            child: Text(content),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Container(
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(15.0),
-                            bottomRight: Radius.circular(15.0),
-                          ),
-                        ),
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(15.0),
-                                bottomRight: Radius.circular(15.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 24.0),
+                              child: Text(
+                                title,
+                                style: const TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                             ),
-                          ),
-                          child: const Text('닫기'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
+                            const SizedBox(height: 20),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 24.0),
+                                child: SingleChildScrollView(
+                                  child: Text(snapshot.data.toString()),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(15.0),
+                                  bottomRight: Radius.circular(15.0),
+                                ),
+                              ),
+                              width: double.infinity,
+                              height: 40,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(15.0),
+                                      bottomRight: Radius.circular(15.0),
+                                    ),
+                                  ),
+                                ),
+                                child: Text('닫기',
+                                    style:
+                                        TextStyle(color: grayscaleSwatch[600])),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ),
+              );
+            }
+          },
         );
       },
     );
@@ -147,16 +221,7 @@ class TermsPolicyPageState extends State<TermsPolicyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('약관 동의'),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
+      appBar: const CustomAppBar(title: '약관 동의', iconStat: true),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -184,7 +249,7 @@ class TermsPolicyPageState extends State<TermsPolicyPage> {
                   isEnabled: true,
                   buttonType: ButtonType.text,
                   onPressed: () async {
-                    _showDialog("이용 약관", "이용 약관 내용");
+                    _showDialog("이용 약관", _termsText);
                   },
                   child: Text(
                     '자세히보기',
@@ -219,7 +284,7 @@ class TermsPolicyPageState extends State<TermsPolicyPage> {
                   isEnabled: true,
                   buttonType: ButtonType.text,
                   onPressed: () async {
-                    _showDialog("개인정보 이용 약관", "개인정보 이용 약관 내용");
+                    _showDialog("개인정보 이용 약관", _policyText);
                   },
                   child: Text(
                     '자세히보기',
