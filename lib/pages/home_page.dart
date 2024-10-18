@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   static const List<String> _titles = <String>[
     '스케줄',
     '나의 예약',
-    '소개 영상',
+    '시설 소개',
     '운동 영상',
     '개인 설정',
   ];
@@ -72,8 +72,8 @@ class _HomePageState extends State<HomePage> {
               label: '나의 예약',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.video_file),
-              label: '소개 영상',
+              icon: Icon(Icons.fitness_center),
+              label: '시설 소개',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.video_library),
