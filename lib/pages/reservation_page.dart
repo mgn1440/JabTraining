@@ -89,7 +89,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
                         itemCount: reservations.length,
                         itemBuilder: (context, index) {
                           final reservation = reservations[index];
-                          print(reservation.startTime.toLocal());
                           return WorkoutTile(
                             workoutName: reservation.workoutName,
                             startTime: reservation.startTime.toLocal(), // 한국시간
