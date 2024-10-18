@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:jab_training/provider/terms_policy_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/pages/auth_gate.dart';
 import 'package:jab_training/pages/home_page.dart';
@@ -32,6 +33,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => LocationProvider()),
         ChangeNotifierProvider(
             create: (context) => GymEquipmentsProvider(supabase)),
+        ChangeNotifierProvider(
+            create: (context) => TermsPolicyProvider(supabase)),
       ],
       child: MaterialApp(
         title: 'Supabase Flutter',
