@@ -7,12 +7,14 @@ class EquipmentCard extends StatefulWidget {
   final String title;
   final String description;
   final String imageUrl;
+  final int count;
 
   const EquipmentCard({
     super.key,
     required this.title,
     required this.description,
     required this.imageUrl,
+    required this.count,
     this.columnCount = 6,
   });
 
@@ -62,14 +64,28 @@ class EquipmentCardState extends State<EquipmentCard> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: AutoSizeText(
-                widget.title,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-                maxLines: 1,
-                minFontSize: 8,
+              child: Row(
+                children: [
+                  AutoSizeText(
+                    widget.title,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                    minFontSize: 8,
+                  ),
+                  Expanded(child: Container()),
+                  AutoSizeText(
+                    "${widget.count}개",
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                    minFontSize: 8,
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -104,7 +120,7 @@ class EquipmentGrid extends StatelessWidget {
         crossAxisCount: 2, // 한 줄에 두 개의 카드
         crossAxisSpacing: 16.0,
         mainAxisSpacing: 16.0,
-        childAspectRatio: 3 / 4.0, // 카드의 가로 세로 비율
+        childAspectRatio: 3 / 4.2, // 카드의 가로 세로 비율
       ),
       itemCount: equipmentList.length,
       itemBuilder: (context, index) {
@@ -113,6 +129,7 @@ class EquipmentGrid extends StatelessWidget {
           title: equipment['title']!,
           description: equipment['description']!,
           imageUrl: equipment['imageUrl']!,
+          count: equipment['count']!,
         );
       },
     );
