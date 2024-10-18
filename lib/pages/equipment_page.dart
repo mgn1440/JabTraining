@@ -46,6 +46,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                         'title': equipment['title'],
                         'description': equipment['description'],
                         'imageUrl': equipment['imageUrl'],
+                        'count': equipment['count'],
                       };
                     }).toList(),
                   );
