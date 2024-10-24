@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jab_training/component/video_list_component.dart';
+import 'package:jab_training/component/custom_app_bar.dart';
 
 class FitnessVideoPage extends StatefulWidget {
   const FitnessVideoPage({super.key});
@@ -15,7 +17,7 @@ class _FitnessVideoPageState extends State<FitnessVideoPage> {
         title: const Text('피트니스 영상'),
       ),
       body: const Center(
-        child: Text('Workout Video Page'),
+        child: VideoListComponent(videoType: 'fitness'),
       ),
     );
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jab_training/component/video_component.dart';
+import 'package:jab_training/component/video_list_component.dart';
 import 'package:jab_training/component/custom_app_bar.dart';
 
 class BoxingVideoPage extends StatefulWidget {
@@ -17,7 +17,7 @@ class _BoxingVideoPageState extends State<BoxingVideoPage> {
         title: '복싱 영상',
         iconStat: true,
       ),
-      body: VideoComponent(),
+      body: VideoListComponent(videoType: 'boxing'),
     );
   }
 }

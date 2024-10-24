@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jab_training/component/video_list_component.dart';
+import 'package:jab_training/component/custom_app_bar.dart';
 
 class CrossfitVideoPage extends StatefulWidget {
   const CrossfitVideoPage({super.key});
@@ -10,13 +12,12 @@ class CrossfitVideoPage extends StatefulWidget {
 class _CrossfitVideoPageState extends State<CrossfitVideoPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('크로스핏 영상'),
+    return const Scaffold(
+      appBar: CustomAppBar(
+          title: '크로스핏 영상',
+          iconStat: true,
       ),
-      body: const Center(
-        child: Text('Workout Video Page'),
-      ),
+      body: VideoListComponent(videoType: 'crossfit'),
     );
   }
 }

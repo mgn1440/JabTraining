@@ -6,14 +6,18 @@ import 'package:flutter/foundation.dart';
 import 'package:jab_training/component/custom_video_player.dart';
 
 
-class VideoComponent extends StatefulWidget {
-  const VideoComponent({super.key});
+class VideoListComponent extends StatefulWidget {
+  final String videoType;
+  const VideoListComponent({
+    super.key,
+    required this.videoType,
+  });
 
   @override
-  State<VideoComponent> createState() => _VideoComponentState();
+  State<VideoListComponent> createState() => _VideoListComponentState();
 }
 
-class _VideoComponentState extends State<VideoComponent> {
+class _VideoListComponentState extends State<VideoListComponent> {
   List<Map<String, dynamic>> videoList = [];
 
   @override
@@ -25,7 +29,7 @@ class _VideoComponentState extends State<VideoComponent> {
   Future<void> _fetchVideos() async {
     final supabase = Supabase.instance.client;
     try {
-      final response = await supabase.from('videos').select();
+      final response = await supabase.from('videos').select().eq('video_type', widget.videoType);
       setState(() {
         videoList = List<Map<String, dynamic>>.from(response);
       });
