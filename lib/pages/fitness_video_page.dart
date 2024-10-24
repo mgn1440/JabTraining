@@ -10,8 +10,11 @@ class FitnessVideoPage extends StatefulWidget {
 class _FitnessVideoPageState extends State<FitnessVideoPage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('피트니스 영상'),
+      ),
+      body: const Center(
         child: Text('Workout Video Page'),
       ),
     );
