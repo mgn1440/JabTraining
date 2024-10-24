@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jab_training/component/custom_app_bar.dart';
-import 'package:jab_training/component/buttons.dart';
+import 'package:jab_training/component/custom_buttons.dart';
 import 'package:jab_training/main.dart';
 import 'package:jab_training/provider/terms_policy_provider.dart';
 

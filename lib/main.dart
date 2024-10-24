@@ -9,8 +9,10 @@ import 'package:jab_training/provider/calendar_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:jab_training/provider/location_provider.dart';
 import 'package:jab_training/provider/gym_equipment_provider.dart';
+import 'dart:async';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load();
   await Supabase.initialize(
     url: dotenv.env['SUPABASE_URL']!,
@@ -20,11 +22,16 @@ Future<void> main() async {
 }
 
 final supabase = Supabase.instance.client;
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -62,11 +69,19 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: supabase.auth.currentSession == null
-            ? const AuthGate()
-            : const HomePage(),
+        navigatorKey: navigatorKey,
+        home: _getInitialPage(),
       ),
     );
+  }
+
+  Widget _getInitialPage() {
+    final session = supabase.auth.currentSession;
+    if (session == null) {
+      return const AuthGate();
+    } else {
+      return const HomePage();
+    }
   }
 }
 

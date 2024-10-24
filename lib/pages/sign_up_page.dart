@@ -4,7 +4,7 @@ import 'package:jab_training/const/color.dart';
 import 'package:jab_training/main.dart';
 import 'package:jab_training/pages/home_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:jab_training/component/buttons.dart';
+import 'package:jab_training/component/custom_buttons.dart';
 import 'package:jab_training/pages/terms_policy_page.dart';
 import 'package:jab_training/component/custom_app_bar.dart';
 

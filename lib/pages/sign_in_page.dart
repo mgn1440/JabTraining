@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:jab_training/component/buttons.dart';
+import 'package:jab_training/component/custom_buttons.dart';
 import 'package:jab_training/const/color.dart';
 import 'package:jab_training/main.dart';
 import 'package:jab_training/pages/home_page.dart';
@@ -8,6 +8,7 @@ import 'package:jab_training/component/custom_app_bar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:jab_training/provider/calendar_provider.dart';
+import 'package:jab_training/pages/find_password_page.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -139,6 +140,18 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                 ],
               ),
+            ),
+            CustomButton(
+              isEnabled: true,
+              buttonType: ButtonType.text,
+              onPressed: () async {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => FindPasswordPage(),
+                  ),
+                );
+              },
+              child: const Text('비밀번호 찾기'),
             ),
             CustomButton(
               isEnabled: _isFormValid,

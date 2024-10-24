@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jab_training/const/color.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:jab_training/component/buttons.dart';
+import 'package:jab_training/component/custom_buttons.dart';
 import 'package:jab_training/pages/sign_up_page.dart';
 import 'package:jab_training/component/custom_app_bar.dart';
 

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jab_training/pages/sign_in_page.dart';
-import 'package:jab_training/pages/terms_policy_page.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:jab_training/component/buttons.dart';
+import 'package:jab_training/component/custom_buttons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jab_training/pages/gym_select_page.dart';
 
-class AuthGate extends StatelessWidget {
+class AuthGate extends StatefulWidget {
   const AuthGate({super.key});
 
+  @override
+  State<AuthGate> createState() => _AuthGateState();
+}
+
+class _AuthGateState extends State<AuthGate> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
