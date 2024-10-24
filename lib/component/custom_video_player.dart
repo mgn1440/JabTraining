@@ -39,13 +39,13 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          showControls = !showControls;
-        });
-      },
-      child: SingleChildScrollView(
+    return Scaffold(
+      body: GestureDetector(
+        onTap: () {
+          setState(() {
+            showControls = !showControls;
+          });
+        },
         child: Column(
           children: <Widget>[
             Container(
