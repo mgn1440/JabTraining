@@ -47,7 +47,7 @@ class CustomButtonState extends State<CustomButton> {
                 foregroundColor: WidgetStateProperty.resolveWith<Color>(
                   (Set<WidgetState> states) {
                     if (states.contains(WidgetState.disabled)) {
-                      return grayscaleSwatch[600]!;
+                      return grayscaleSwatch[200]!;
                     }
                     return grayscaleSwatch[600]!;
                   },
@@ -55,15 +55,17 @@ class CustomButtonState extends State<CustomButton> {
                 backgroundColor: WidgetStateProperty.resolveWith<Color>(
                   (Set<WidgetState> states) {
                     if (states.contains(WidgetState.disabled)) {
-                      return primarySwatch[800]!;
+                      return primarySwatch[200]!;
                     }
                     return primarySwatch[500]!;
                   },
                 ),
                 textStyle: WidgetStateProperty.all<TextStyle>(
-                  const TextStyle(
+                  TextStyle(
                     fontSize: 16, // 텍스트 크기
-                    fontWeight: FontWeight.normal, // 텍스트 굵기
+                    color: widget.isEnabled
+                        ? grayscaleSwatch[600]
+                        : grayscaleSwatch[200],
                   ),
                 ),
               ),
@@ -79,15 +81,18 @@ class CustomButtonState extends State<CustomButton> {
               onPressed: widget.isEnabled ? widget.onPressed : null,
               style: OutlinedButton.styleFrom(
                 foregroundColor:
-                    widget.isEnabled ? primarySwatch[500] : primarySwatch[800],
+                    widget.isEnabled ? primarySwatch[500] : primarySwatch[200],
                 side: BorderSide(
                   color: widget.isEnabled
                       ? primarySwatch[500]!
-                      : primarySwatch[800]!,
+                      : primarySwatch[200]!,
                 ),
-                textStyle: const TextStyle(
+                textStyle: TextStyle(
                   fontSize: 16, // 텍스트 크기
                   fontWeight: FontWeight.normal, // 텍스트 굵기
+                  color: widget.isEnabled
+                      ? grayscaleSwatch[600]
+                      : grayscaleSwatch[200],
                 ),
               ),
               child: widget.child,
@@ -98,7 +103,10 @@ class CustomButtonState extends State<CustomButton> {
             onPressed: widget.isEnabled ? widget.onPressed : null,
             style: TextButton.styleFrom(
               foregroundColor:
-                  widget.isEnabled ? primarySwatch[500] : primarySwatch[800],
+                  widget.isEnabled ? primarySwatch[500] : primarySwatch[200],
+              textStyle: TextStyle(
+                fontWeight: FontWeight.w900,
+              ),
             ),
             child: widget.child,
           );
@@ -167,7 +175,8 @@ class SelectButtonGroupState extends State<SelectButtonGroup> {
                       : grayscaleSwatch[100]!,
                 ),
               ),
-              child: Text(widget.buttonLabels[index]),
+              child: Text(widget.buttonLabels[index],
+                  style: const TextStyle(fontWeight: FontWeight.w100)),
             ),
           ),
         );

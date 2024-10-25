@@ -15,7 +15,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: background.withOpacity(1.0), // 배경색 설정
+        color: background2.withOpacity(1.0), // 배경색 설정
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.5), // 그림자 색상 및 투명도 설정

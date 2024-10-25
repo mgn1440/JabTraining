@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Supabase Flutter',
-        theme: ThemeData.dark().copyWith(
+        theme: ThemeData.light().copyWith(
           scaffoldBackgroundColor: background,
           inputDecorationTheme: InputDecorationTheme(
             enabledBorder: UnderlineInputBorder(
