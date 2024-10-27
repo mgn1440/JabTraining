@@ -35,7 +35,7 @@ class VideoThumbnailComponent extends StatelessWidget {
                   left: 12,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: grayscaleSwatch[400],
+                      color: grayscaleSwatch[200],
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Padding(
@@ -45,14 +45,14 @@ class VideoThumbnailComponent extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.access_time,
-                            color: grayscaleSwatch[100],
+                            color: grayscaleSwatch[400],
                             size: 16,
                           ),
                           const SizedBox(width: 6),
                           Text(
                             "${video['duration'].toString()} Min",
                             style: TextStyle(
-                              color: grayscaleSwatch[100],
+                              color: grayscaleSwatch[00],
                               fontSize: 10,
                             ),
                           ),
