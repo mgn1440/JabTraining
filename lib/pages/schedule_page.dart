@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:jab_training/const/color.dart';
 import 'package:jab_training/component/gym_select_app_bar.dart';
 import 'dart:async';
-import 'package:jab_training/component/reservation_modal_handler.dart';
+import 'package:jab_training/pages/reservation_page.dart';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
@@ -163,12 +163,8 @@ class _SchedulePageState extends State<SchedulePage> {
                         child: Text('선택한 날짜의 운동 수업이 없습니다.'),
                       );
                     }
-                    return ListView.separated(
+                    return ListView.builder(
                         itemCount: workouts.length,
-                        separatorBuilder: (context, index) => Divider(
-                              height: 1,
-                              color: grayscaleSwatch[400],
-                            ),
                         itemBuilder: (context, index) {
                           final workout = workouts[index];
                           return FutureBuilder<bool>(
