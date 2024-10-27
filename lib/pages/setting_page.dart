@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:jab_training/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/pages/auth_gate.dart';
 import 'package:jab_training/pages//profile_edit_page.dart';
 import 'package:jab_training/pages//password_edit_page.dart';
 import 'package:jab_training/pages/terms_policy_show_page.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -13,6 +16,7 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
+
   Future<void> _signOut() async {
     final supabase = Supabase.instance.client;
     try {
@@ -24,23 +28,81 @@ class _SettingPageState extends State<SettingPage> {
       }
     } on AuthException catch (error) {
       if (mounted) {
-        _showSnackBar(error.message, isError: true);
+        context.showSnackBar(error.message, isError: true);
       }
     } catch (error) {
       if (mounted) {
-        _showSnackBar('Unexpected error occurred', isError: true);
+        context.showSnackBar('Unexpected error occurred', isError: true);
       }
     }
   }
 
-  void _showSnackBar(String message, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError ? Colors.red : Colors.green,
-      ),
+  Future<void> _deleteUser() async {
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+
+    if (userId == null) {
+      context.showSnackBar('사용자를 찾을 수 없습니다.', isError: true);
+      return;
+    }
+
+
+    try {
+      final response = await http.post(
+        Uri.parse('https://fxplgtgwynaldjiyvpii.supabase.co/functions/v1/delete-user'),
+        headers: {
+          'Authorization': 'Bearer ${Supabase.instance.client.auth.currentSession?.accessToken}',
+        },
+        body: {
+          'user_id': userId,
+        },
+      );
+      if (response.statusCode == 200) {
+        if (mounted) {
+          await Supabase.instance.client.auth.signOut(); // 세션제거
+          context.showSnackBar('회원 탈퇴가 완료되었습니다.');
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const AuthGate()),
+          );
+        }
+      } else {
+        if (mounted) {
+          context.showSnackBar('회원 탈퇴에 실패했습니다.', isError: true);
+        }
+      }
+    } catch (error) {
+      if (mounted) {
+        context.showSnackBar('알 수 없는 에러가 발생했습니다.', isError: true);
+      }
+    }
+  }
+
+  void _confirmDeleteUser() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('회원 탈퇴'),
+          content: const Text('정말 탈퇴 하시겠습니까?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('아니요'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _deleteUser();
+              },
+              child: const Text('예'),
+            ),
+          ],
+        );
+      },
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +125,7 @@ class _SettingPageState extends State<SettingPage> {
             );
           }),
           _buildListTile('로그아웃', _signOut),
-          _buildListTile('회원탈퇴', () {
-            // 회원 탈퇴 로직
-          }),
+          _buildListTile('회원탈퇴', _confirmDeleteUser),
         ],
       ),
     );
