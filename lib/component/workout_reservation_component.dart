@@ -104,7 +104,7 @@ class WorkoutTile extends StatelessWidget {
                               style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color: Colors.black,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),

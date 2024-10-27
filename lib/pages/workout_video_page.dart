@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jab_training/pages/boxing_video_page.dart';
-import 'package:jab_training/pages/crossfit_video_page.dart';
+import 'package:jab_training/pages/team_training_page.dart';
 import 'package:jab_training/pages/fitness_video_page.dart';
 
 class WorkoutVideoPage extends StatefulWidget {
@@ -36,20 +36,10 @@ class _WorkoutVideoPageState extends State<WorkoutVideoPage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const CrossfitVideoPage()),
+                    MaterialPageRoute(builder: (context) => const TeamTrainingPage()),
                   );
                 },
-                child: Image.asset('assets/images/crossfit.png'),
-              ),
-              const SizedBox(height: 20),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const FitnessVideoPage()),
-                  );
-                },
-                child: Image.asset('assets/images/fitness.png'),
+                child: Image.asset('assets/images/team.png'),
               ),
             ],
           ),
