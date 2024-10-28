@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
       ],
       child: MaterialApp(
         title: 'Supabase Flutter',
-        theme: ThemeData.dark().copyWith(
+        theme: ThemeData.light().copyWith(
           scaffoldBackgroundColor: background,
           inputDecorationTheme: InputDecorationTheme(
             enabledBorder: UnderlineInputBorder(

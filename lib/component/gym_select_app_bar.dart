@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jab_training/component/buttons.dart';
 import 'package:provider/provider.dart';
 import 'package:jab_training/const/color.dart';
 import 'package:jab_training/provider/location_provider.dart';
@@ -28,6 +29,7 @@ class GymSelectAppBar extends StatelessWidget implements PreferredSizeWidget {
       preferredSize: const Size.fromHeight(54),
       child: AppBar(
         backgroundColor: background,
+        scrolledUnderElevation: 0,
         title: Consumer<LocationProvider>(
           builder: (context, locationProvider, child) {
             return Center(
@@ -53,14 +55,21 @@ class GymSelectAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ],
                     ),
                   ),
+                  // CustomButton(
+                  //   isEnabled: true,
+                  //   buttonType: ButtonType.text,
+                  //   onPressed: () async => selectGymLocation(context),
+                  //   columnCount: 1,
+                  //   child: const Text('바꾸기'),
+                  // )
                   TextButton(
                       onPressed: () => selectGymLocation(context),
                       child: Text(
                         '바꾸기',
                         style: TextStyle(
                           color: primarySwatch[500],
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900,
                         ),
                       ))
                 ],

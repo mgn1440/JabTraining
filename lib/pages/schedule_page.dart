@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:jab_training/const/color.dart';
 import 'package:jab_training/component/gym_select_app_bar.dart';
 import 'dart:async';
+import 'package:jab_training/pages/reservation_page.dart';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
@@ -129,45 +130,7 @@ class _SchedulePageState extends State<SchedulePage> {
       appBar: GymSelectAppBar(),
       body: Column(
         children: [
-          TableCalendar(
-            headerVisible: false, // 년도와 달 뜨는 헤더
-            daysOfWeekHeight: 50,
-            focusedDay: calendarProvider.focusedDay,
-            firstDay: DateTime.now(), // 오늘 포함 7일 표시
-            lastDay: DateTime.now().add(const Duration(days: 14)),
-            rangeStartDay: DateTime.now().subtract(const Duration(days: 1)),
-            startingDayOfWeek: getStartingDayOfWeek(),
-            calendarFormat: _calendarFormat,
-            daysOfWeekStyle: DaysOfWeekStyle(
-              weekdayStyle: TextStyle(color: grayscaleSwatch[100]),
-              weekendStyle: TextStyle(color: grayscaleSwatch[100]),
-            ),
-            selectedDayPredicate: (day) {
-              return isSameDay(calendarProvider.selectedDate, day);
-            },
-            onDaySelected: (selectedDay, focusedDay) {
-              if (!isSameDay(calendarProvider.selectedDate, selectedDay)) {
-                calendarProvider.updateFocusedDay(focusedDay);
-                calendarProvider.updateSelectedDate(selectedDay);
-              }
-            },
-            headerStyle: const HeaderStyle(
-              formatButtonVisible: false,
-            ),
-            calendarStyle: CalendarStyle(
-              todayDecoration: const BoxDecoration(
-                shape: BoxShape.circle,
-              ),
-              selectedDecoration: BoxDecoration(
-                color: primarySwatch[500],
-                shape: BoxShape.circle,
-              ),
-              todayTextStyle: TextStyle(color: grayscaleSwatch[100]),
-              weekendTextStyle: TextStyle(color: grayscaleSwatch[100]),
-              defaultTextStyle: TextStyle(color: grayscaleSwatch[100]),
-              selectedTextStyle: const TextStyle(color: Colors.black),
-            ),
-          ),
+         _buildCalendar(),
           const SizedBox(height: 20),
           Expanded(
               child: StreamBuilder<List<Workout>>(
@@ -200,12 +163,8 @@ class _SchedulePageState extends State<SchedulePage> {
                         child: Text('선택한 날짜의 운동 수업이 없습니다.'),
                       );
                     }
-                    return ListView.separated(
+                    return ListView.builder(
                         itemCount: workouts.length,
-                        separatorBuilder: (context, index) => Divider(
-                              height: 1,
-                              color: grayscaleSwatch[400],
-                            ),
                         itemBuilder: (context, index) {
                           final workout = workouts[index];
                           return FutureBuilder<bool>(
@@ -238,5 +197,53 @@ class _SchedulePageState extends State<SchedulePage> {
         ],
       ),
     );
+  }
+
+  Widget _buildCalendar() {
+    try {
+      return TableCalendar(
+        headerVisible: false, // 년도와 달 뜨는 헤더
+        daysOfWeekHeight: 50,
+        focusedDay: calendarProvider.focusedDay,
+        firstDay: DateTime.now(), // 오늘 포함 7일 표시
+        lastDay: DateTime.now().add(const Duration(days: 14)),
+        startingDayOfWeek: getStartingDayOfWeek(),
+        calendarFormat: _calendarFormat,
+        daysOfWeekStyle: DaysOfWeekStyle(
+          weekdayStyle: TextStyle(color: grayscaleSwatch[100]),
+          weekendStyle: TextStyle(color: grayscaleSwatch[100]),
+        ),
+        selectedDayPredicate: (day) {
+          return isSameDay(calendarProvider.selectedDate, day);
+        },
+        onDaySelected: (selectedDay, focusedDay) {
+          if (!isSameDay(calendarProvider.selectedDate, selectedDay)) {
+            calendarProvider.updateFocusedDay(focusedDay);
+            calendarProvider.updateSelectedDate(selectedDay);
+          }
+        },
+        headerStyle: const HeaderStyle(
+          formatButtonVisible: false,
+        ),
+        calendarStyle: CalendarStyle(
+          todayDecoration: const BoxDecoration(
+            shape: BoxShape.circle,
+          ),
+          selectedDecoration: BoxDecoration(
+            color: primarySwatch[500],
+            shape: BoxShape.circle,
+          ),
+          todayTextStyle: TextStyle(color: grayscaleSwatch[100]),
+          weekendTextStyle: TextStyle(color: grayscaleSwatch[100]),
+          defaultTextStyle: TextStyle(color: grayscaleSwatch[100]),
+          selectedTextStyle: const TextStyle(color: Colors.black),
+        ),
+      );
+    } catch (e) {
+      setState(() {}); // 12시에 날짜 넘어갔을 때 다시 랜더링 하기
+      return const Center(
+        child: Text('오류가 발생했습니다! 다시 시도해주세요.'),
+      );
+    }
   }
 }

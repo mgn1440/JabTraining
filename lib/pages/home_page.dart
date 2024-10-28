@@ -3,6 +3,7 @@ import 'package:jab_training/pages/setting_page.dart';
 import 'package:jab_training/pages/schedule_page.dart';
 import 'package:jab_training/pages/reservation_page.dart';
 import 'package:jab_training/pages/equipment_page.dart';
+import 'package:jab_training/component/video_list_component.dart';
 import 'package:jab_training/pages/workout_video_page.dart';
 import 'package:jab_training/const/color.dart';
 import 'package:jab_training/component/custom_app_bar.dart';
@@ -86,7 +87,7 @@ class _HomePageState extends State<HomePage> {
           ],
           currentIndex: _selectedIndex,
           selectedItemColor: primarySwatch[500],
-          backgroundColor: background,
+          backgroundColor: background2,
           onTap: _onItemTapped,
         ),
       ),

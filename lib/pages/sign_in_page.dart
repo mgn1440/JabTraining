@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:jab_training/component/custom_buttons.dart';
 import 'package:jab_training/const/color.dart';
 import 'package:jab_training/main.dart';
+import 'package:jab_training/pages/find_password_page.dart';
 import 'package:jab_training/pages/home_page.dart';
 import 'package:jab_training/component/custom_app_bar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

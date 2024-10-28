@@ -72,11 +72,11 @@ class _ReservationsPageState extends State<ReservationsPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                      AppBar(
-                       backgroundColor: grayscaleSwatch[500],
+                       backgroundColor: background,
                        title: Text(
                            _formatDate(date),
                             style: const TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
@@ -89,7 +89,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
                         itemCount: reservations.length,
                         itemBuilder: (context, index) {
                           final reservation = reservations[index];
-                          print(reservation.startTime.toLocal());
                           return WorkoutTile(
                             workoutName: reservation.workoutName,
                             startTime: reservation.startTime.toLocal(), // 한국시간
@@ -110,7 +109,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
 
   Future<Map<DateTime, List<Workout>>> fetchReservationsGroupedByDate() async {
     // 오늘의 시작 시점 (한국 시간으로 00:00:00)
-    final todayStart = DateTime.now().toUtc().add(Duration(hours: 9)); // KST로 변환
+    final todayStart = DateTime.now().toUtc().toLocal();
     final todayStartDate = DateTime(todayStart.year, todayStart.month, todayStart.day); // 오늘의 시작
 
 
@@ -137,17 +136,21 @@ class _ReservationsPageState extends State<ReservationsPage> {
 
     for (var workout in workouts) {
       DateTime workoutDate = DateTime(
-        workout.startTime.year,
-        workout.startTime.month,
-        workout.startTime.day,
+        workout.startTime.toLocal().year,
+        workout.startTime.toLocal().month,
+        workout.startTime.toLocal().day,
       );
-
       if (!groupedWorkouts.containsKey(workoutDate)) {
         groupedWorkouts[workoutDate] = [];
       }
       groupedWorkouts[workoutDate]!.add(workout);
     }
-    //print(groupedWorkouts);
+
+    // 시간순으로 정렬
+    for (var date in groupedWorkouts.keys) {
+      groupedWorkouts[date]!.sort((a, b) => a.startTime.compareTo(b.startTime));
+    }
+
     return groupedWorkouts;
   }
 

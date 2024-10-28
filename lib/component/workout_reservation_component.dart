@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jab_training/component/reservation_modal_handler.dart';
 import 'package:jab_training/const/color.dart';
 
 
@@ -24,9 +25,9 @@ class WorkoutTile extends StatelessWidget {
   });
 
   final List<String> _gymLocations = const [
-    '선릉점',
-    '역삼점',
     '교대점',
+    '역삼점',
+    '선릉점',
   ];
 
   String formattedTime() {
@@ -103,7 +104,7 @@ class WorkoutTile extends StatelessWidget {
                               style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color: Colors.black,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -148,7 +149,7 @@ class WorkoutTile extends StatelessWidget {
                   SizedBox(
                     width: 100,
                     child: ElevatedButton(
-                      onPressed: onReserve,
+                      onPressed: () async => handleReservation(context, onReserve, workoutName, startTime, duration, locationId),
                       style: ElevatedButton.styleFrom(
                           foregroundColor: primarySwatch[500],
                           backgroundColor: background,
