@@ -5,8 +5,9 @@ import 'package:jab_training/pages/auth_gate.dart';
 import 'package:jab_training/pages//profile_edit_page.dart';
 import 'package:jab_training/pages//password_edit_page.dart';
 import 'package:jab_training/pages/terms_policy_show_page.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:jab_training/provider/session_provider.dart';
+import 'package:provider/provider.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -16,7 +17,6 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-
   Future<void> _signOut() async {
     final supabase = Supabase.instance.client;
     try {
@@ -25,6 +25,11 @@ class _SettingPageState extends State<SettingPage> {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const AuthGate()),
         );
+      }
+      if (mounted) {
+        SessionProvider sessionProvider =
+            Provider.of<SessionProvider>(context, listen: false);
+        sessionProvider.setSession(false);
       }
     } on AuthException catch (error) {
       if (mounted) {
@@ -45,12 +50,13 @@ class _SettingPageState extends State<SettingPage> {
       return;
     }
 
-
     try {
       final response = await http.post(
-        Uri.parse('https://fxplgtgwynaldjiyvpii.supabase.co/functions/v1/delete-user'),
+        Uri.parse(
+            'https://fxplgtgwynaldjiyvpii.supabase.co/functions/v1/delete-user'),
         headers: {
-          'Authorization': 'Bearer ${Supabase.instance.client.auth.currentSession?.accessToken}',
+          'Authorization':
+              'Bearer ${Supabase.instance.client.auth.currentSession?.accessToken}',
         },
         body: {
           'user_id': userId,
@@ -102,7 +108,6 @@ class _SettingPageState extends State<SettingPage> {
       },
     );
   }
-
 
   @override
   Widget build(BuildContext context) {

@@ -1,32 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:jab_training/component/custom_app_bar.dart';
-import 'package:jab_training/component/buttons.dart';
+import 'package:jab_training/component/custom_buttons.dart';
 import 'package:jab_training/const/color.dart';
+import 'package:jab_training/main.dart';
 
 class FindPasswordPage extends StatefulWidget {
   const FindPasswordPage({super.key});
 
   @override
-  State<FindPasswordPage> createState() => _FindPasswordPageState();
+  FindPasswordPageState createState() => FindPasswordPageState();
 }
 
-class _FindPasswordPageState extends State<FindPasswordPage> {
+class FindPasswordPageState extends State<FindPasswordPage> {
   final TextEditingController _emailController = TextEditingController();
-  bool _isFormValid = false;
   bool _isLoading = false;
+  bool _isFormValid = false;
 
-  void _validateForm() {
+  void _onEmailChanged() {
     setState(() {
       _isFormValid = _emailController.text.isNotEmpty;
     });
   }
 
-  Future<void> _requestPasswordReset() async {
+  Future<void> _sendResetEmail() async {
     setState(() {
       _isLoading = true;
     });
-
-    // Add your password reset logic here
+    supabase.auth
+        .resetPasswordForEmail(
+      _emailController.text,
+      redirectTo: 'jabtraining://reset-password',
+    )
+        .then((value) {
+      context.showSnackBar('비밀번호 재설정 이메일을 보냈습니다.');
+    }).catchError((error) {
+      context.showSnackBar(error.toString(), isError: true);
+    }).whenComplete(() {
+      setState(() {
+        _isLoading = false;
+      });
+    });
 
     setState(() {
       _isLoading = false;
@@ -36,11 +49,12 @@ class _FindPasswordPageState extends State<FindPasswordPage> {
   @override
   void initState() {
     super.initState();
-    _emailController.addListener(_validateForm);
+    _emailController.addListener(_onEmailChanged);
   }
 
   @override
   void dispose() {
+    _emailController.removeListener(_onEmailChanged);
     _emailController.dispose();
     super.dispose();
   }
@@ -48,29 +62,27 @@ class _FindPasswordPageState extends State<FindPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
-        title: '비밀번호 찾기',
-        iconStat: true,
-      ),
+      appBar: const CustomAppBar(title: '비밀번호 찾기', iconStat: true),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           children: [
-            const SizedBox(height: 18),
+            const SizedBox(height: 36),
             TextField(
               controller: _emailController,
               cursorColor: grayscaleSwatch[100],
+              keyboardType: TextInputType.emailAddress,
               decoration: const InputDecoration(
                 labelText: '이메일',
+                border: OutlineInputBorder(),
               ),
-              keyboardType: TextInputType.emailAddress,
             ),
             Expanded(child: Container()),
             CustomButton(
               isEnabled: _isFormValid && !_isLoading,
               buttonType: ButtonType.filled,
-              onPressed: _requestPasswordReset,
-              child: Text(_isLoading ? '로딩중...' : '비밀번호 초기화 요청'),
+              onPressed: _sendResetEmail,
+              child: Text(_isLoading ? '로딩중...' : '전송'),
             ),
             const SizedBox(height: 40),
           ],

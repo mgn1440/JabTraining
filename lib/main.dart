@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:jab_training/provider/terms_policy_provider.dart';
+import 'package:jab_training/pages/find_password_page.dart';
+import 'package:jab_training/pages/reset_password_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/pages/auth_gate.dart';
 import 'package:jab_training/pages/home_page.dart';
 import 'package:jab_training/const/color.dart';
-import 'package:jab_training/provider/calendar_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:jab_training/provider/calendar_provider.dart';
+import 'package:jab_training/provider/terms_policy_provider.dart';
 import 'package:jab_training/provider/location_provider.dart';
 import 'package:jab_training/provider/gym_equipment_provider.dart';
+import 'package:jab_training/provider/session_provider.dart';
+import 'package:app_links/app_links.dart';
+import 'dart:async';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load();
   await Supabase.initialize(
     url: dotenv.env['SUPABASE_URL']!,
@@ -20,11 +26,39 @@ Future<void> main() async {
 }
 
 final supabase = Supabase.instance.client;
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  SessionProvider _sessionProvider = SessionProvider();
+
+  @override
+  void initState() {
+    super.initState();
+    final appLinks = AppLinks(); // AppLinks is singleton
+
+    // Subscribe to all events (initial link and further)
+    final sub = appLinks.uriLinkStream.listen((uri) {
+      if (uri.host == 'reset-password') {
+        navigatorKey.currentState!.push(
+          MaterialPageRoute(
+            builder: (context) => const ResetPasswordPage(),
+          ),
+        );
+      }
+    });
+    // _sessionProvider = Provider.of<SessionProvider>(context, listen: false);
+    // _sessionProvider.addListener(() {
+    //   setState(() {});
+    // });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -35,6 +69,7 @@ class MyApp extends StatelessWidget {
             create: (context) => GymEquipmentsProvider(supabase)),
         ChangeNotifierProvider(
             create: (context) => TermsPolicyProvider(supabase)),
+        ChangeNotifierProvider(create: (context) => SessionProvider()),
       ],
       child: MaterialApp(
         title: 'Supabase Flutter',
@@ -62,11 +97,19 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: supabase.auth.currentSession == null
-            ? const AuthGate()
-            : const HomePage(),
+        navigatorKey: navigatorKey,
+        home: _getInitialPage(),
       ),
     );
+  }
+
+  Widget _getInitialPage() {
+    bool session = _sessionProvider.hasSession;
+    if (session == false) {
+      return const AuthGate();
+    } else {
+      return const HomePage();
+    }
   }
 }
 

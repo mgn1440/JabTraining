@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jab_training/component/buttons.dart';
+import 'package:jab_training/component/custom_buttons.dart';
 import 'package:provider/provider.dart';
 import 'package:jab_training/const/color.dart';
 import 'package:jab_training/provider/location_provider.dart';
