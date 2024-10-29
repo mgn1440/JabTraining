@@ -5,11 +5,13 @@ import 'package:jab_training/const/color.dart';
 import 'package:jab_training/main.dart';
 
 class FindPasswordPage extends StatefulWidget {
+  const FindPasswordPage({super.key});
+
   @override
-  _FindPasswordPageState createState() => _FindPasswordPageState();
+  FindPasswordPageState createState() => FindPasswordPageState();
 }
 
-class _FindPasswordPageState extends State<FindPasswordPage> {
+class FindPasswordPageState extends State<FindPasswordPage> {
   final TextEditingController _emailController = TextEditingController();
   bool _isLoading = false;
   bool _isFormValid = false;
@@ -65,7 +67,7 @@ class _FindPasswordPageState extends State<FindPasswordPage> {
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           children: [
-            const SizedBox(height: 18),
+            const SizedBox(height: 36),
             TextField(
               controller: _emailController,
               cursorColor: grayscaleSwatch[100],

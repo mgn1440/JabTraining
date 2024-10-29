@@ -6,6 +6,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/main.dart';
 import 'package:jab_training/provider/terms_policy_provider.dart';
 import 'package:jab_training/component/custom_app_bar.dart';
+import 'package:jab_training/provider/session_provider.dart';
+import 'package:provider/provider.dart';
 
 class TermsPolicyPage extends StatefulWidget {
   final String email;
@@ -52,6 +54,11 @@ class TermsPolicyPageState extends State<TermsPolicyPage> {
         password: widget.password,
         data: widget.data,
       );
+      if (mounted) {
+        SessionProvider sessionProvider =
+            Provider.of<SessionProvider>(context, listen: false);
+        sessionProvider.setSession(true);
+      }
     } on AuthException catch (error) {
       if (mounted) {
         print(error.message);

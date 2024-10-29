@@ -7,6 +7,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/component/custom_buttons.dart';
 import 'package:jab_training/pages/terms_policy_page.dart';
 import 'package:jab_training/component/custom_app_bar.dart';
+import 'package:jab_training/provider/session_provider.dart';
+import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -137,12 +139,15 @@ class _SignUpPageState extends State<SignUpPage> {
     _authStateSubscription = supabase.auth.onAuthStateChange.listen(
       (data) {
         if (_redirecting) return;
-        final session = data.session;
-        if (session != null) {
-          _redirecting = true;
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const HomePage()),
-          );
+        if (mounted) {
+          final SessionProvider sessionProvider =
+              Provider.of<SessionProvider>(context, listen: false);
+          if (sessionProvider.hasSession) {
+            _redirecting = true;
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const HomePage()),
+            );
+          }
         }
       },
       onError: (error) {
