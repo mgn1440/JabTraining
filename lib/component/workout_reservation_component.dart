@@ -6,7 +6,6 @@ import 'package:jab_training/const/color.dart';
 class WorkoutTile extends StatelessWidget {
   final String workoutName;
   final DateTime startTime;
-  final int duration;
   final VoidCallback onReserve; // 등록 or 취소
   final int locationId;
   final bool isReserved;
@@ -17,7 +16,6 @@ class WorkoutTile extends StatelessWidget {
     super.key,
     required this.workoutName,
     required this.startTime,
-    required this.duration,
     required this.onReserve,
     required this.locationId,
     this.isReserved = false,
@@ -154,10 +152,10 @@ class WorkoutTile extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 5),
                           Flexible(
                             child: ElevatedButton(
-                              onPressed: () async => handleReservation(context, onReserve, workoutName, startTime, duration, locationId),
+                              onPressed: () async => handleReservation(context, onReserve, workoutName, startTime, locationId),
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: primarySwatch[500],
                                 backgroundColor: background,

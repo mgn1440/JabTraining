@@ -143,7 +143,6 @@ class _SchedulePageState extends State<SchedulePage> {
                       );
                     }
                     if (snapshot.hasError) {
-                      print('Error: ${snapshot.error}'); // DEBUG
                       return const Center(
                         child: Text('오류가 발생했습니다! 다시 시도해주세요.'),
                       );
@@ -183,7 +182,6 @@ class _SchedulePageState extends State<SchedulePage> {
                                 return WorkoutTile(
                                   workoutName: workout.workoutName,
                                   startTime: workout.startTime.toLocal(),
-                                  duration: workout.duration,
                                   onReserve: _isLoading
                                       ? () => {}
                                       : () => _handleReserve(workout),

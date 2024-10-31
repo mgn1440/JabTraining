@@ -4,11 +4,9 @@ import 'package:intl/intl.dart';
 import 'package:jab_training/const/color.dart';
 import 'package:jab_training/component/custom_buttons.dart';
 
-String formatTimeRange(DateTime startTime, int duration) {
-  final endTime = startTime.add(Duration(minutes: duration));
+String formatTimeRange(DateTime startTime) {
   final startFormat = DateFormat('h:mma').format(startTime).toLowerCase();
-  final endFormat = DateFormat('h:mma').format(endTime).toLowerCase();
-  return '$startFormat - $endFormat';
+  return startFormat;
 }
 
 Future<void> handleReservation(
@@ -16,7 +14,6 @@ Future<void> handleReservation(
     VoidCallback onReserve,
     String workoutName,
     DateTime startTime,
-    int duration,
     int locationId) async {
   final supabase = Supabase.instance.client;
   try {
@@ -56,19 +53,14 @@ Future<void> handleReservation(
                           ),
                           const SizedBox(height: 1),
                           Text(
-                            '${startTime.month}월 ${startTime.day}일 (${[
-                              '월',
-                              '화',
-                              '수',
-                              '목',
-                              '금',
-                              '토',
-                              '일'
-                            ][startTime.weekday - 1]})',
+                            '${startTime.month}월 ${startTime.day}일(${[
+                              '월', '화', '수', '목', '금', '토', '일'
+                            ][startTime.weekday - 1]}) ${formatTimeRange(startTime)}',
                             style: TextStyle(
-                                fontSize: 16,
-                                color: grayscaleSwatch[200],
-                                fontWeight: FontWeight.bold),
+                              fontSize: 16,
+                              color: grayscaleSwatch[200],
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
@@ -82,11 +74,6 @@ Future<void> handleReservation(
                         ),
                       ),
                     ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    formatTimeRange(startTime, duration),
-                    style: TextStyle(fontSize: 14, color: grayscaleSwatch[200]),
                   ),
                   const SizedBox(height: 12),
                   const Divider(), // 줄 추가

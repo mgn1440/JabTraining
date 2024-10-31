@@ -92,7 +92,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
                           return WorkoutTile(
                             workoutName: reservation.workoutName,
                             startTime: reservation.startTime.toLocal(), // 한국시간
-                            duration: reservation.duration,
                             locationId: reservation.locationId,
                             onReserve: () => _cancelReservation(reservation.id),
                             isReservationPage: true,
