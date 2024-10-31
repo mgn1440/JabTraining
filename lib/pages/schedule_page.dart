@@ -176,7 +176,6 @@ class _SchedulePageState extends State<SchedulePage> {
                                       child: CircularProgressIndicator());
                                 }
                                 if (snapshot.hasError) {
-                                  print('Error: ${snapshot.error}'); // DEBUG
                                   return const Center(
                                       child: Text('오류가 발생했습니다! 다시 시도해주세요.'));
                                 }

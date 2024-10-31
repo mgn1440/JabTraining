@@ -53,10 +53,6 @@ class _MyAppState extends State<MyApp> {
         );
       }
     });
-    // _sessionProvider = Provider.of<SessionProvider>(context, listen: false);
-    // _sessionProvider.addListener(() {
-    //   setState(() {});
-    // });
   }
 
   @override
@@ -112,6 +108,7 @@ class _MyAppState extends State<MyApp> {
     }
   }
 }
+
 
 extension ContextExtension on BuildContext {
   void showSnackBar(String message, {bool isError = false}) {

@@ -47,147 +47,160 @@ class WorkoutTile extends StatelessWidget {
     final now = DateTime.now();
     final isPast = startTime.isBefore(now);
 
-    return Card(
-      color: background,
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  formattedTime(),
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  '$duration min',
-                  style: const TextStyle(fontSize: 14),
-                ),
-              ],
-            ),
-            const Spacer(),
-            Text(
-              workoutName,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-            ),
-            const Spacer(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                if (isPast) ...[
-                    const SizedBox(
-                      width: 100,
-                      child: Center(
-                        child: Text(
-                          '완료',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                ] else if (isReservationPage) ...[
-                  SizedBox(
-                    width: 100,
-                    child: Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end, // 텍스트 정렬
-                          children: [
-                            Text(
-                              _gymLocations[locationId - 1],
-                              style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  size: 16,
-                                  Icons.check,
-                                  color: primarySwatch[500],
-                                ),
-                                const SizedBox(width: 2),
-                                Text(
-                                  '예약됨',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: primarySwatch[500],
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Flexible(
-                          fit: FlexFit.tight,
-                          child: IconButton(
-                            onPressed: onReserve,
-                            icon: const Icon(
-                              Icons.close,
-                              color: Colors.red,
+    return SizedBox(
+      height: 80,
+      child: Card(
+        color: background,
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                formattedTime(),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              const Spacer(),
+              Text(
+                workoutName,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+              const Spacer(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (isPast) ...[
+                      const SizedBox(
+                        width: 100,
+                        child: Center(
+                          child: Text(
+                            '완료',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ]
-                else if (isReserved == false) ...[
-                  SizedBox(
-                    width: 100,
-                    child: ElevatedButton(
-                      onPressed: () async => handleReservation(context, onReserve, workoutName, startTime, duration, locationId),
-                      style: ElevatedButton.styleFrom(
-                          foregroundColor: primarySwatch[500],
-                          backgroundColor: background,
-                          side: BorderSide(color: primarySwatch[500]!, width: 1),
                       ),
-                      child: const Text('예약하기'),
-                    ),
-                  ),
-                ]
-                else ...[ // 스케줄 페이지에서 예약된 경우
+                  ] else if (isReservationPage) ...[
                     SizedBox(
                       width: 100,
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              size: 16,
-                              Icons.check,
-                              color: primarySwatch[500],
-                            ),
-                            const SizedBox(width: 3),
-                            Text(
-                              '예약됨',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: primarySwatch[500],
+                      child: Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end, // 텍스트 정렬
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                _gymLocations[locationId - 1],
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 4),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    size: 16,
+                                    Icons.check,
+                                    color: primarySwatch[500],
+                                  ),
+                                  const SizedBox(width: 2),
+                                  Text(
+                                    '예약됨',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: primarySwatch[500],
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Flexible(
+                            fit: FlexFit.tight,
+                            child: IconButton(
+                              onPressed: onReserve,
+                              icon: const Icon(
+                                Icons.close,
+                                color: Colors.red,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
+                  ]
+                  else if (isReserved == false) ...[
+                    SizedBox(
+                      width: 100,
+                      height: 48,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            '10자리 남음',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Flexible(
+                            child: ElevatedButton(
+                              onPressed: () async => handleReservation(context, onReserve, workoutName, startTime, duration, locationId),
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: primarySwatch[500],
+                                backgroundColor: background,
+                                side: BorderSide(color: primarySwatch[500]!, width: 1),
+                              ),
+                              child: const Text('예약하기'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ]
+                  else ...[ // 스케줄 페이지에서 예약된 경우
+                      SizedBox(
+                        width: 100,
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                size: 16,
+                                Icons.check,
+                                color: primarySwatch[500],
+                              ),
+                              const SizedBox(width: 3),
+                              Text(
+                                '예약됨',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: primarySwatch[500],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
                 ],
-              ],
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
