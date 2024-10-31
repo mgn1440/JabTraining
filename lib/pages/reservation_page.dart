@@ -107,7 +107,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
   }
 
   Future<Map<DateTime, List<Workout>>> fetchReservationsGroupedByDate() async {
-    // 오늘의 시작 시점 (한국 시간으로 00:00:00)
     final todayStart = DateTime.now().toUtc().toLocal();
     final todayStartDate = DateTime(todayStart.year, todayStart.month, todayStart.day); // 오늘의 시작
 
@@ -119,7 +118,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
           id,
           workout_name,
           start_time,
-          duration,
           location_id
           )
          ''')
