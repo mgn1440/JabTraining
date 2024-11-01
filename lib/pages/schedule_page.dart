@@ -130,7 +130,7 @@ class _SchedulePageState extends State<SchedulePage> {
       appBar: GymSelectAppBar(),
       body: Column(
         children: [
-         _buildCalendar(),
+          _buildCalendar(),
           const SizedBox(height: 20),
           Expanded(
               child: StreamBuilder<List<Workout>>(
@@ -143,7 +143,6 @@ class _SchedulePageState extends State<SchedulePage> {
                       );
                     }
                     if (snapshot.hasError) {
-                      print('Error: ${snapshot.error}'); // DEBUG
                       return const Center(
                         child: Text('오류가 발생했습니다! 다시 시도해주세요.'),
                       );
@@ -176,19 +175,19 @@ class _SchedulePageState extends State<SchedulePage> {
                                       child: CircularProgressIndicator());
                                 }
                                 if (snapshot.hasError) {
-                                  print('Error: ${snapshot.error}'); // DEBUG
                                   return const Center(
                                       child: Text('오류가 발생했습니다! 다시 시도해주세요.'));
                                 }
                                 final isReserved = snapshot.data ?? false;
                                 return WorkoutTile(
+                                  workoutId: workout.id,
                                   workoutName: workout.workoutName,
                                   startTime: workout.startTime.toLocal(),
-                                  duration: workout.duration,
                                   onReserve: _isLoading
                                       ? () => {}
                                       : () => _handleReserve(workout),
                                   locationId: workout.locationId,
+                                  capacity: workout.capacity,
                                   isReserved: isReserved,
                                 );
                               });

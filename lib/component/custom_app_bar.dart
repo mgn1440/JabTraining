@@ -30,7 +30,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         title: Text(title),
         centerTitle: true,
         backgroundColor: Colors.transparent, // AppBar의 배경색을 투명하게 설정
-        elevation: 0, // AppBar의 기본 elevation 제거
         leading: iconStat
             ? IconButton(
                 icon: const Icon(Icons.arrow_back_ios_new),
