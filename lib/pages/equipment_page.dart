@@ -44,9 +44,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                         .map((equipment) {
                       return {
                         'title': equipment['title'],
-                        'description': equipment['description'],
-                        'imageUrl': equipment['imageUrl'],
-                        'count': equipment['count'],
+                        'imageurl': equipment['imageurl'],
                       };
                     }).toList(),
                   );
