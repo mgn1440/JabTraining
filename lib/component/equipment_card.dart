@@ -64,37 +64,11 @@ class EquipmentCardState extends State<EquipmentCard> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  AutoSizeText(
-                    widget.title,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: 1,
-                    minFontSize: 8,
-                  ),
-                  Expanded(child: Container()),
-                  AutoSizeText(
-                    "${widget.count}개",
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: 1,
-                    minFontSize: 8,
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: AutoSizeText(
-                widget.description,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: grayscaleSwatch[100],
+                widget.title,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
                 maxLines: 1,
                 minFontSize: 8,
@@ -110,17 +84,20 @@ class EquipmentCardState extends State<EquipmentCard> {
 class EquipmentGrid extends StatelessWidget {
   final List<Map<String, dynamic>> equipmentList;
 
-  EquipmentGrid({required this.equipmentList});
+  const EquipmentGrid({
+    super.key,
+    required this.equipmentList,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
       padding: const EdgeInsets.all(16.0),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2, // 한 줄에 두 개의 카드
         crossAxisSpacing: 16.0,
         mainAxisSpacing: 16.0,
-        childAspectRatio: 3 / 4.2, // 카드의 가로 세로 비율
+        childAspectRatio: 3 / 3.75, // 카드의 가로 세로 비율
       ),
       itemCount: equipmentList.length,
       itemBuilder: (context, index) {
