@@ -91,9 +91,11 @@ class _ReservationsPageState extends State<ReservationsPage> {
                         itemBuilder: (context, index) {
                           final reservation = reservations[index];
                           return WorkoutTile(
+                            workoutId: reservation.id,
                             workoutName: reservation.workoutName,
                             startTime: reservation.startTime.toLocal(), // 한국시간
                             locationId: reservation.locationId,
+                            capacity: reservation.capacity,
                             onReserve: () => _cancelReservation(reservation.id),
                             isReservationPage: true,
                           );
@@ -116,7 +118,8 @@ class _ReservationsPageState extends State<ReservationsPage> {
           id,
           workout_name,
           start_time,
-          location_id
+          location_id,
+          capacity
           )
          ''')
         .eq('user_id', supabase.auth.currentUser!.id)
@@ -142,7 +145,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
       groupedWorkouts[workoutDate]!.add(workout);
     }
 
-    // 시간순으로 정렬
     for (var date in groupedWorkouts.keys) {
       groupedWorkouts[date]!.sort((a, b) => a.startTime.compareTo(b.startTime));
     }

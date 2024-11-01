@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:jab_training/component/reservation_modal_handler.dart';
 import 'package:jab_training/const/color.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:jab_training/component/available_slot_widget.dart';
 
 class WorkoutTile extends StatelessWidget {
+  final String workoutId;
   final String workoutName;
   final DateTime startTime;
   final VoidCallback onReserve; // 등록 or 취소
   final int locationId;
   final bool isReserved;
   final bool isReservationPage;
+  final int capacity;
 
   const WorkoutTile({
     super.key,
+    required this.workoutId,
     required this.workoutName,
     required this.startTime,
     required this.onReserve,
     required this.locationId,
+    required this.capacity,
     this.isReserved = false,
     this.isReservationPage = false,
   });
@@ -37,6 +43,17 @@ class WorkoutTile extends StatelessWidget {
     }
     return '$hour:${startTime.minute.toString().padLeft(2, '0')} $period';
   }
+
+  Future<int> _fetchReservationCount(String workoutId, int capacity) async {
+    final response = await Supabase.instance.client
+        .from('reservations')
+        .select('user_id')
+        .eq('workout_id', workoutId)
+        .count();
+    final reservedCount = response.count ?? 0;
+    return capacity - reservedCount;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -137,62 +154,37 @@ class WorkoutTile extends StatelessWidget {
                         ],
                       ),
                     ),
-                  ] else if (isReserved == false) ...[
-                    SizedBox(
-                      width: 100,
-                      height: 48,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            '10자리 남음',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          Flexible(
-                            child: ElevatedButton(
-                              onPressed: () async => handleReservation(
-                                  context,
-                                  onReserve,
-                                  workoutName,
-                                  startTime,
-                                  locationId),
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: primarySwatch[500],
-                                backgroundColor: background2,
-                                side: BorderSide(
-                                    color: primarySwatch[500]!, width: 1),
-                              ),
-                              child: const Text('예약하기'),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ] else ...[
-                    // 스케줄 페이지에서 예약된 경우
-                    SizedBox(
-                      width: 100,
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              size: 16,
-                              Icons.check,
-                              color: primarySwatch[500],
-                            ),
-                            const SizedBox(width: 3),
-                            Text(
-                              '예약됨',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
+                  ]
+                  else if (isReserved == false) ...[
+                   FutureBuilder<int>(
+                       future: _fetchReservationCount(workoutId, capacity),
+                       builder: (context, snapshot) {
+                         if (snapshot.connectionState == ConnectionState.waiting) {
+                           return const CircularProgressIndicator();
+                         }
+                         if (snapshot.hasError) {
+                           print(snapshot.error);
+                            return const Text('다시 시도해주세요');
+                         }
+                         final remainingSlots = snapshot.data!;
+                         return AvailableSlotWidget(
+                           remainingSlots: remainingSlots,
+                           onReserve: onReserve,
+                         );
+                       }
+                   )
+                  ]
+                  else ...[ // 스케줄 페이지에서 예약된 경우
+                      SizedBox(
+                        width: 100,
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                size: 16,
+                                Icons.check,
                                 color: primarySwatch[500],
                               ),
                             ),

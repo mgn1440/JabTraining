@@ -180,12 +180,14 @@ class _SchedulePageState extends State<SchedulePage> {
                                 }
                                 final isReserved = snapshot.data ?? false;
                                 return WorkoutTile(
+                                  workoutId: workout.id,
                                   workoutName: workout.workoutName,
                                   startTime: workout.startTime.toLocal(),
                                   onReserve: _isLoading
                                       ? () => {}
                                       : () => _handleReserve(workout),
                                   locationId: workout.locationId,
+                                  capacity: workout.capacity,
                                   isReserved: isReserved,
                                 );
                               });
