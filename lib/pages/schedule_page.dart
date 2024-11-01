@@ -130,7 +130,7 @@ class _SchedulePageState extends State<SchedulePage> {
       appBar: GymSelectAppBar(),
       body: Column(
         children: [
-         _buildCalendar(),
+          _buildCalendar(),
           const SizedBox(height: 20),
           Expanded(
               child: StreamBuilder<List<Workout>>(

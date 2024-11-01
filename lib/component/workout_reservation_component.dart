@@ -4,7 +4,6 @@ import 'package:jab_training/const/color.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/component/available_slot_widget.dart';
 
-
 class WorkoutTile extends StatelessWidget {
   final String workoutId;
   final String workoutName;
@@ -14,7 +13,6 @@ class WorkoutTile extends StatelessWidget {
   final bool isReserved;
   final bool isReservationPage;
   final int capacity;
-
 
   const WorkoutTile({
     super.key,
@@ -65,7 +63,7 @@ class WorkoutTile extends StatelessWidget {
     return SizedBox(
       height: 80,
       child: Card(
-        color: background,
+        color: background2,
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Row(
@@ -73,12 +71,14 @@ class WorkoutTile extends StatelessWidget {
             children: [
               Text(
                 formattedTime(),
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const Spacer(),
               Text(
                 workoutName,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
               const Spacer(),
               Column(
@@ -86,34 +86,35 @@ class WorkoutTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (isPast) ...[
-                      const SizedBox(
-                        width: 100,
-                        child: Center(
-                          child: Text(
-                            '완료',
+                    const SizedBox(
+                      width: 100,
+                      child: Center(
+                        child: Text(
+                          '완료',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.red,
                             fontWeight: FontWeight.bold,
-                            ),
                           ),
                         ),
                       ),
+                    ),
                   ] else if (isReservationPage) ...[
                     SizedBox(
                       width: 100,
                       child: Row(
                         children: [
                           Column(
-                            crossAxisAlignment: CrossAxisAlignment.end, // 텍스트 정렬
+                            crossAxisAlignment:
+                                CrossAxisAlignment.end, // 텍스트 정렬
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
                                 _gymLocations[locationId - 1],
                                 style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
                                 ),
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -186,19 +187,11 @@ class WorkoutTile extends StatelessWidget {
                                 Icons.check,
                                 color: primarySwatch[500],
                               ),
-                              const SizedBox(width: 3),
-                              Text(
-                                '예약됨',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: primarySwatch[500],
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
+                    ),
                   ],
                 ],
               )
