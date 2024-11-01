@@ -187,6 +187,15 @@ class WorkoutTile extends StatelessWidget {
                                 Icons.check,
                                 color: primarySwatch[500],
                               ),
+                              const SizedBox(width: 2),
+                              Text(
+                                '예약됨',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: primarySwatch[500],
+                                ),
+                              ),
                           ],
                         ),
                       ),
