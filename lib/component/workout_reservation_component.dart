@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:jab_training/component/reservation_modal_handler.dart';
 import 'package:jab_training/const/color.dart';
 
-
 class WorkoutTile extends StatelessWidget {
   final String workoutName;
   final DateTime startTime;
@@ -10,7 +9,6 @@ class WorkoutTile extends StatelessWidget {
   final int locationId;
   final bool isReserved;
   final bool isReservationPage;
-
 
   const WorkoutTile({
     super.key,
@@ -48,7 +46,7 @@ class WorkoutTile extends StatelessWidget {
     return SizedBox(
       height: 80,
       child: Card(
-        color: background,
+        color: background2,
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Row(
@@ -56,12 +54,14 @@ class WorkoutTile extends StatelessWidget {
             children: [
               Text(
                 formattedTime(),
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const Spacer(),
               Text(
                 workoutName,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
               const Spacer(),
               Column(
@@ -69,34 +69,35 @@ class WorkoutTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (isPast) ...[
-                      const SizedBox(
-                        width: 100,
-                        child: Center(
-                          child: Text(
-                            '완료',
+                    const SizedBox(
+                      width: 100,
+                      child: Center(
+                        child: Text(
+                          '완료',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.red,
                             fontWeight: FontWeight.bold,
-                            ),
                           ),
                         ),
                       ),
+                    ),
                   ] else if (isReservationPage) ...[
                     SizedBox(
                       width: 100,
                       child: Row(
                         children: [
                           Column(
-                            crossAxisAlignment: CrossAxisAlignment.end, // 텍스트 정렬
+                            crossAxisAlignment:
+                                CrossAxisAlignment.end, // 텍스트 정렬
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
                                 _gymLocations[locationId - 1],
                                 style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
                                 ),
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -136,8 +137,7 @@ class WorkoutTile extends StatelessWidget {
                         ],
                       ),
                     ),
-                  ]
-                  else if (isReserved == false) ...[
+                  ] else if (isReserved == false) ...[
                     SizedBox(
                       width: 100,
                       height: 48,
@@ -155,11 +155,17 @@ class WorkoutTile extends StatelessWidget {
                           const SizedBox(height: 5),
                           Flexible(
                             child: ElevatedButton(
-                              onPressed: () async => handleReservation(context, onReserve, workoutName, startTime, locationId),
+                              onPressed: () async => handleReservation(
+                                  context,
+                                  onReserve,
+                                  workoutName,
+                                  startTime,
+                                  locationId),
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: primarySwatch[500],
-                                backgroundColor: background,
-                                side: BorderSide(color: primarySwatch[500]!, width: 1),
+                                backgroundColor: background2,
+                                side: BorderSide(
+                                    color: primarySwatch[500]!, width: 1),
                               ),
                               child: const Text('예약하기'),
                             ),
@@ -167,33 +173,33 @@ class WorkoutTile extends StatelessWidget {
                         ],
                       ),
                     ),
-                  ]
-                  else ...[ // 스케줄 페이지에서 예약된 경우
-                      SizedBox(
-                        width: 100,
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(
-                                size: 16,
-                                Icons.check,
+                  ] else ...[
+                    // 스케줄 페이지에서 예약된 경우
+                    SizedBox(
+                      width: 100,
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              size: 16,
+                              Icons.check,
+                              color: primarySwatch[500],
+                            ),
+                            const SizedBox(width: 3),
+                            Text(
+                              '예약됨',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
                                 color: primarySwatch[500],
                               ),
-                              const SizedBox(width: 3),
-                              Text(
-                                '예약됨',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: primarySwatch[500],
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
+                    ),
                   ],
                 ],
               )
