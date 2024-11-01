@@ -5,16 +5,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 class EquipmentCard extends StatefulWidget {
   final int columnCount;
   final String title;
-  final String description;
-  final String imageUrl;
-  final int count;
+  final String imageurl;
 
   const EquipmentCard({
     super.key,
     required this.title,
-    required this.description,
-    required this.imageUrl,
-    required this.count,
+    required this.imageurl,
     this.columnCount = 6,
   });
 
@@ -56,7 +52,7 @@ class EquipmentCardState extends State<EquipmentCard> {
               borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(7)), // 굵기 만큼 빼야함
               child: Image.network(
-                widget.imageUrl,
+                widget.imageurl,
                 height: 150,
                 width: double.infinity,
                 fit: BoxFit.cover,
@@ -104,9 +100,7 @@ class EquipmentGrid extends StatelessWidget {
         final equipment = equipmentList[index];
         return EquipmentCard(
           title: equipment['title']!,
-          description: equipment['description']!,
-          imageUrl: equipment['imageUrl']!,
-          count: equipment['count']!,
+          imageurl: equipment['imageurl']!,
         );
       },
     );
