@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'dart:async';
 import 'package:jab_training/component/custom_buttons.dart';
 import 'package:jab_training/const/color.dart';
@@ -235,7 +236,7 @@ class TermsPolicyPageState extends State<TermsPolicyPage> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Checkbox(
+                CustomCheckbox(
                   value: _isTermsChecked,
                   onChanged: (bool? value) {
                     setState(() {
@@ -243,6 +244,7 @@ class TermsPolicyPageState extends State<TermsPolicyPage> {
                     });
                   },
                 ),
+                const SizedBox(width: 8),
                 GestureDetector(
                   onTap: () {
                     setState(() {
@@ -270,7 +272,7 @@ class TermsPolicyPageState extends State<TermsPolicyPage> {
             ),
             Row(
               children: <Widget>[
-                Checkbox(
+                CustomCheckbox(
                   value: _isPrivacyChecked,
                   onChanged: (bool? value) {
                     setState(() {
@@ -278,6 +280,7 @@ class TermsPolicyPageState extends State<TermsPolicyPage> {
                     });
                   },
                 ),
+                const SizedBox(width: 8),
                 GestureDetector(
                   onTap: () {
                     setState(() {
@@ -305,7 +308,7 @@ class TermsPolicyPageState extends State<TermsPolicyPage> {
             ),
             Row(
               children: <Widget>[
-                Checkbox(
+                CustomCheckbox(
                   value: _isOver14Checked,
                   onChanged: (bool? value) {
                     setState(() {
@@ -313,6 +316,7 @@ class TermsPolicyPageState extends State<TermsPolicyPage> {
                     });
                   },
                 ),
+                const SizedBox(width: 8),
                 GestureDetector(
                   onTap: () {
                     setState(() {
@@ -322,6 +326,18 @@ class TermsPolicyPageState extends State<TermsPolicyPage> {
                   child: const Text('만 14세 이상입니다.'),
                 ),
                 Expanded(child: Container()),
+                CustomButton(
+                  isEnabled: false,
+                  buttonType: ButtonType.text,
+                  onPressed: () async {},
+                  child: Text(
+                    '',
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      decorationColor: primarySwatch[500],
+                    ),
+                  ),
+                ),
               ],
             ),
             Expanded(child: Container()),
@@ -336,6 +352,42 @@ class TermsPolicyPageState extends State<TermsPolicyPage> {
             ),
             const SizedBox(height: 40),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class CustomCheckbox extends StatefulWidget {
+  final bool value;
+  final ValueChanged<bool?> onChanged;
+
+  const CustomCheckbox(
+      {super.key, required this.value, required this.onChanged});
+
+  @override
+  CustomCheckboxState createState() => CustomCheckboxState();
+}
+
+class CustomCheckboxState extends State<CustomCheckbox> {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        widget.onChanged(!widget.value);
+      },
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 200),
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+        child: SvgPicture.asset(
+          widget.value
+              ? 'assets/images/selected_check.svg'
+              : 'assets/images/unselected_check.svg',
+          key: ValueKey<bool>(widget.value),
+          width: 20,
+          height: 20,
         ),
       ),
     );
