@@ -187,7 +187,6 @@ class WorkoutTile extends StatelessWidget {
                                 Icons.check,
                                 color: primarySwatch[500],
                               ),
-                            ),
                           ],
                         ),
                       ),
