@@ -44,16 +44,13 @@ class WorkoutTile extends StatelessWidget {
     return '$hour:${startTime.minute.toString().padLeft(2, '0')} $period';
   }
 
-  Future<int> _fetchReservationCount(String workoutId, int capacity) async {
-    final response = await Supabase.instance.client
+  Stream<int> reservationCountStream(String workoutId, int capacity) {
+    return Supabase.instance.client
         .from('reservations')
-        .select('user_id')
+        .stream(primaryKey: ['id'])
         .eq('workout_id', workoutId)
-        .count();
-    final reservedCount = response.count ?? 0;
-    return capacity - reservedCount;
+        .map((reservations) => capacity - reservations.length);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -105,8 +102,7 @@ class WorkoutTile extends StatelessWidget {
                       child: Row(
                         children: [
                           Column(
-                            crossAxisAlignment:
-                                CrossAxisAlignment.end, // 텍스트 정렬
+                            crossAxisAlignment:CrossAxisAlignment.end, // 텍스트 정렬
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
@@ -155,24 +151,23 @@ class WorkoutTile extends StatelessWidget {
                       ),
                     ),
                   ]
-                  else if (isReserved == false) ...[
-                   FutureBuilder<int>(
-                       future: _fetchReservationCount(workoutId, capacity),
+                  else if (!isReserved) ...[
+                   StreamBuilder(
+                       stream: reservationCountStream(workoutId, capacity),
                        builder: (context, snapshot) {
                          if (snapshot.connectionState == ConnectionState.waiting) {
                            return const CircularProgressIndicator();
                          }
-                         if (snapshot.hasError) {
-                           print(snapshot.error);
+                          if (snapshot.hasError) {
                             return const Text('다시 시도해주세요');
-                         }
-                         final remainingSlots = snapshot.data!;
+                          }
+                         final remainingSlots = snapshot.data as int;
                          return AvailableSlotWidget(
                            remainingSlots: remainingSlots,
                            onReserve: onReserve,
                          );
-                       }
-                   )
+                       },
+                   ),
                   ]
                   else ...[ // 스케줄 페이지에서 예약된 경우
                       SizedBox(
