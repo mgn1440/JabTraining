@@ -30,7 +30,7 @@ class AvailableSlotWidget extends StatelessWidget {
           const SizedBox(height: 5),
           Flexible(
             child: ElevatedButton(
-              onPressed: onReserve,
+              onPressed: remainingSlots > 0 ? onReserve : null,
               style: ElevatedButton.styleFrom(
                 foregroundColor: primarySwatch[500],
                 backgroundColor: background,
