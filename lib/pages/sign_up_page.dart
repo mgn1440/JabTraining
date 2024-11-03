@@ -18,9 +18,9 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  bool _isLoading = false;
   bool _redirecting = false;
   bool _isFormValid = false;
+  bool? _isExistingMember;
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -41,7 +41,8 @@ class _SignUpPageState extends State<SignUpPage> {
           _passwordController.text.isNotEmpty &&
           _confirmPasswordController.text.isNotEmpty &&
           _birthController.text.isNotEmpty &&
-          _selectedGender != null;
+          _selectedGender != null &&
+          _isExistingMember != null;
     });
   }
 
@@ -121,7 +122,7 @@ class _SignUpPageState extends State<SignUpPage> {
             'phone': _phoneController.text,
             'birth': _birthController.text,
             'gender': _selectedGender,
-            'first_check_in': false,
+            'first_check_in': _isExistingMember,
           },
         ),
       ),
@@ -250,14 +251,51 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   obscureText: true,
                 ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                        '잽트레이닝 기존 회원이신가요?',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: grayscaleSwatch[100],
+                        )
+                    ),
+                    Radio<bool>(
+                      value: true,
+                      groupValue: _isExistingMember,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _isExistingMember = value;
+                          _validateForm();
+                        });
+                      },
+                      activeColor: primarySwatch[500],
+                    ),
+                    const Text('네'),
+                    Radio<bool>(
+                      value: false,
+                      groupValue: _isExistingMember,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _isExistingMember = value;
+                          _validateForm();
+                        });
+                      },
+                      activeColor: primarySwatch[500],
+                    ),
+                    const Text('아니요'),
+                  ],
+                ),
               ],
             ),
           ),
           CustomButton(
-            isEnabled: _isFormValid && !_isLoading,
+            isEnabled: _isFormValid,
             buttonType: ButtonType.filled,
             onPressed: _onPressd,
-            child: Text(_isLoading ? '로딩중...' : "회원가입"),
+            child: const Text("회원가입"),
           ),
           const SizedBox(height: 40),
         ],

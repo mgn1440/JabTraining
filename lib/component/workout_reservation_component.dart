@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:jab_training/component/reservation_modal_handler.dart';
 import 'package:jab_training/const/color.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/component/available_slot_widget.dart';
@@ -163,6 +162,9 @@ class WorkoutTile extends StatelessWidget {
                           }
                          final remainingSlots = snapshot.data as int;
                          return AvailableSlotWidget(
+                            workoutName: workoutName,
+                            startTime: startTime,
+                            locationId: locationId,
                            remainingSlots: remainingSlots,
                            onReserve: onReserve,
                          );
