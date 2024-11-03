@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:jab_training/const/color.dart';
+import 'package:jab_training/component/reservation_modal_handler.dart';
 
 class AvailableSlotWidget extends StatelessWidget {
   final int remainingSlots;
   final VoidCallback onReserve;
+  final String workoutName;
+  final DateTime startTime;
+  final int locationId;
 
   const AvailableSlotWidget({
     super.key,
     required this.remainingSlots,
     required this.onReserve,
+    required this.workoutName,
+    required this.startTime,
+    required this.locationId,
   });
 
   @override
@@ -30,7 +37,9 @@ class AvailableSlotWidget extends StatelessWidget {
           const SizedBox(height: 5),
           Flexible(
             child: ElevatedButton(
-              onPressed: onReserve,
+              onPressed: remainingSlots > 0
+                  ? () => handleReservation(context, onReserve, workoutName, startTime, locationId)
+                  : null,
               style: ElevatedButton.styleFrom(
                 foregroundColor: primarySwatch[500],
                 backgroundColor: background,
