@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jab_training/const/color.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class EquipmentCard extends StatefulWidget {
   final int columnCount;
@@ -51,8 +52,8 @@ class EquipmentCardState extends State<EquipmentCard> {
             ClipRRect(
               borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(7)), // 굵기 만큼 빼야함
-              child: Image.network(
-                widget.imageurl,
+              child: CachedNetworkImage(
+                imageUrl: widget.imageurl,
                 height: 150,
                 width: double.infinity,
                 fit: BoxFit.cover,
