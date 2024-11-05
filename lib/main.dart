@@ -68,6 +68,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => SessionProvider()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Supabase Flutter',
         theme: ThemeData.light().copyWith(
           scaffoldBackgroundColor: background,
