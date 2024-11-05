@@ -4,7 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jab_training/component/video_thumbnail_component.dart';
 import 'package:flutter/foundation.dart';
 import 'package:jab_training/component/custom_video_player.dart';
-
+import 'package:jab_training/component/custom_youtube_player.dart';
 
 class VideoListComponent extends StatefulWidget {
   final String videoType;
@@ -29,7 +29,8 @@ class _VideoListComponentState extends State<VideoListComponent> {
   Future<void> _fetchVideos() async {
     final supabase = Supabase.instance.client;
     try {
-      final response = await supabase.from('videos').select().eq('video_type', widget.videoType);
+      final response = await supabase.from('youtube_video').select().eq('video_type', widget.videoType);
+      print(response);
       setState(() {
         videoList = List<Map<String, dynamic>>.from(response);
       });
@@ -50,13 +51,14 @@ class _VideoListComponentState extends State<VideoListComponent> {
             : ListView.builder(
                 itemCount: videoList.length,
                 itemBuilder: (context, index) {
+                  print(videoList[index]);
                   return VideoThumbnailComponent(
                       video: videoList[index],
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CustomVideoPlayer(
+                            builder: (context) => CustomYoutubePlayer(
                               videoUrl: videoList[index]['video_url'], // video URL 전달
                             ),
                           ),
