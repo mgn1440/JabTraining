@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jab_training/pages/boxing_video_page.dart';
 import 'package:jab_training/pages/team_training_page.dart';
-import 'package:jab_training/pages/fitness_video_page.dart';
 
 class WorkoutVideoPage extends StatefulWidget {
   const WorkoutVideoPage({super.key});
